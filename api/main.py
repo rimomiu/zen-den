@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router.router)
-app.include_router(blogs_router.router)
+# app.include_router(blogs_router.router)
 # app.include_router(comments_router.router)
 
 
