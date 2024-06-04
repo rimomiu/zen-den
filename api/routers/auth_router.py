@@ -1,6 +1,3 @@
-"""
-User Authentication API Router
-"""
 from fastapi import (
     Depends,
     Request,
@@ -35,9 +32,8 @@ async def signup(
     response: Response,
     queries: UserQueries = Depends(),
 ) -> UserResponse:
-    """
-    Creates a new user when someone submits the signup form
-    """
+
+    #Creates a new user when someone submits the signup form
     # Hash the password the user sent us
     hashed_password = hash_password(new_user.password)
 
@@ -75,9 +71,8 @@ async def signin(
     response: Response,
     queries: UserQueries = Depends(),
 ) -> UserResponse:
-    """
-    Signs the user in when they use the Sign In form
-    """
+
+    #Signs the user in when they use the Sign In form
 
     # Try to get the user from the database
     user = queries.get_by_username(user_request.username)
@@ -112,21 +107,20 @@ async def signin(
     # Convert the UserWithPW to a UserOut
     return UserResponse(**user.model_dump())
 
+
 @router.get("/authenticate")
 async def authenticate(
     user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> UserResponse:
-    """
-    This function returns the user if the user is logged in.
+    # This function returns the user if the user is logged in.
 
-    The `try_get_jwt_user_data` function tries to get the user and validate
-    the JWT
+    # The `try_get_jwt_user_data` function tries to get the user and validate
+    # the JWT
 
-    If the user isn't logged in this returns a 404
+    # If the user isn't logged in this returns a 404
 
-    This can be used in your frontend to determine if a user
-    is logged in or not
-    """
+    # This can be used in your frontend to determine if a user
+    # is logged in or not
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Not logged in"
@@ -139,9 +133,8 @@ async def signout(
     request: Request,
     response: Response,
 ):
-    """
-    Signs the user out by deleting their JWT Cookie
-    """
+
+    #Signs the user out by deleting their JWT Cookie
     # Secure cookies only if running on something besides localhost
     secure = True if request.headers.get("origin") == "localhost" else False
 
