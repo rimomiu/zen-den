@@ -76,7 +76,7 @@ class UserQueries:
 
         return user
 
-    def create_user(self, new_user: UserRequest, hashed_password: str) -> UserWithPw:
+    def create_user(self, new_user:UserRequest, hashed_password:str) -> UserWithPw:
         # Creates a new user in the database
         # Raises a UserInsertionException if creating the user fails
         try:
@@ -106,11 +106,11 @@ class UserQueries:
                     user = cur.fetchone()
                     if not user:
                         raise UserDatabaseException(
-                            f"Could not create user with username {new_user.username}"
+                            f"Couldn't create username {new_user.username}"
                         )
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(
-                f"Could not create user with username {new_user.username}"
+                f"Couldn't create username {new_user.username}"
             )
         return user
