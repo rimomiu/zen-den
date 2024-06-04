@@ -1,7 +1,3 @@
-"""
-Custom Exceptions for the App
-"""
-
-
+#Custom Exceptions for the App
 class UserDatabaseException(Exception):
     pass

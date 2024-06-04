@@ -1,6 +1,4 @@
-"""
-Helper functions for implementing authentication
-"""
+# Helper functions for implementing authentication
 import os
 import bcrypt
 from calendar import timegm
@@ -23,9 +21,7 @@ if not SIGNING_KEY:
 
 
 async def decode_jwt(token: str) -> Optional[JWTPayload]:
-    """
-    Helper function to decode the JWT from a token string
-    """
+    # Helper function to decode the JWT from a token string
     try:
         payload = jwt.decode(token, SIGNING_KEY, algorithms=[ALGORITHM])
         return JWTPayload(**payload)
@@ -37,28 +33,28 @@ async def decode_jwt(token: str) -> Optional[JWTPayload]:
 async def try_get_jwt_user_data(
     fast_api_token: Annotated[str | None, Cookie()] = None,
 ) -> Optional[JWTUserData]:
-    """
-    This function can be dependency injected into a route
+    # """
+    # This function can be dependency injected into a route
 
-    It checks the JWT token from the cookie and attempts to get the user
-    from the payload of the JWT
+    # It checks the JWT token from the cookie and attempts to get the user
+    # from the payload of the JWT
 
-    *NOTE* this does not get the user from the database, if you
-    need to do that you must call another method after calling this
+    # *NOTE* this does not get the user from the database, if you
+    # need to do that you must call another method after calling this
 
-    Returns None when the user isn't logged in
+    # Returns None when the user isn't logged in
 
-    Example usage:
+    # Example usage:
 
-    ```python
-    @app.get("/some-protected-route"):
-    def some_protected_route(user: Depends(try_get_user_data)):
-        if not user:
-            # Do somthing when not logged in
-        else:
-            # Do something when logged in
-    ```
-    """
+    # ```python
+    # @app.get("/some-protected-route"):
+    # def some_protected_route(user: Depends(try_get_user_data)):
+    #     if not user:
+    #         # Do somthing when not logged in
+    #     else:
+    #         # Do something when logged in
+    # ```
+    # """
     # If there's no cookie at all, return None
     if not fast_api_token:
         return
@@ -72,32 +68,32 @@ async def try_get_jwt_user_data(
 
 
 def verify_password(plain_password, hashed_password) -> bool:
-    """
-    This verifies the user's password, by hashing the plain
-    password and then comparing it to the hashed password
-    from the database
-    """
+    # """
+    # This verifies the user's password, by hashing the plain
+    # password and then comparing it to the hashed password
+    # from the database
+    # """
     return bcrypt.checkpw(
         plain_password.encode("utf-8"), hashed_password.encode("utf-8")
     )
 
 
 def hash_password(plain_password) -> str:
-    """
-    Helper function that hashes a password
-    """
+    # """
+    # Helper function that hashes a password
+    # """
     return bcrypt.hashpw(
         plain_password.encode("utf-8"), bcrypt.gensalt()
     ).decode()
 
 
 def generate_jwt(user: UserWithPw) -> str:
-    """
-    Generates a new JWT token using the user's information
+    # """
+    # Generates a new JWT token using the user's information
 
-    We store the user as a JWTUserData converted to a dictionary
-    in the payload of the JWT
-    """
+    # We store the user as a JWTUserData converted to a dictionary
+    # in the payload of the JWT
+    # """
     exp = timegm((datetime.utcnow() + timedelta(hours=1)).utctimetuple())
     jwt_data = JWTPayload(
         exp=exp,
