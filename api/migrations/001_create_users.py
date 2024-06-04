@@ -15,8 +15,8 @@ steps = [
         # "Down" SQL statement
         """
         DROP TABLE users;
-        """
+        """,
     ],
 ]
-#if we want to add things to this table by creating a new file,
-#004_create_users and do "Alter Table" instead of "Create Table" and icnlude only the alterations you want to include
+# if we want to add things to this table by creating a new file,
+# 004_create_users and do "Alter Table" instead of "Create Table" and icnlude only the alterations you want to include

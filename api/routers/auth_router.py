@@ -33,7 +33,7 @@ async def signup(
     queries: UserQueries = Depends(),
 ) -> UserResponse:
 
-    #Creates a new user when someone submits the signup form
+    # Creates a new user when someone submits the signup form
     # Hash the password the user sent us
     hashed_password = hash_password(new_user.password)
 
@@ -72,7 +72,7 @@ async def signin(
     queries: UserQueries = Depends(),
 ) -> UserResponse:
 
-    #Signs the user in when they use the Sign In form
+    # Signs the user in when they use the Sign In form
 
     # Try to get the user from the database
     user = queries.get_by_username(user_request.username)
@@ -134,7 +134,7 @@ async def signout(
     response: Response,
 ):
 
-    #Signs the user out by deleting their JWT Cookie
+    # Signs the user out by deleting their JWT Cookie
     # Secure cookies only if running on something besides localhost
     secure = True if request.headers.get("origin") == "localhost" else False
 

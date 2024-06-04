@@ -76,7 +76,9 @@ class UserQueries:
 
         return user
 
-    def create_user(self, new_user: UserRequest, hashed_password: str) -> UserWithPw:
+    def create_user(
+        self, new_user: UserRequest, hashed_password: str
+    ) -> UserWithPw:
         # Creates a new user in the database
         # Raises a UserInsertionException if creating the user fails
         try:
