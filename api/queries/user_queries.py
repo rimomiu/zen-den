@@ -6,7 +6,7 @@ import psycopg
 from psycopg_pool import ConnectionPool
 from psycopg.rows import class_row
 from typing import Optional
-from models.users import UserWithPw
+from models.users import UserWithPw, UserRequest
 from utils.exceptions import UserDatabaseException
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -79,7 +79,7 @@ class UserQueries:
 
         return user
 
-    def create_user(self, username: str, hashed_password: str) -> UserWithPw:
+    def create_user(self, new_user:UserRequest, hashed_password: str) -> UserWithPw:
         """
         Creates a new user in the database
 
@@ -92,24 +92,31 @@ class UserQueries:
                         """
                         INSERT INTO users (
                             username,
-                            password
+                            password,
+                            first_name,
+                            last_name,
+                            email
                         ) VALUES (
-                            %s, %s
+                            %s, %s, %s, %s, %s
                         )
                         RETURNING *;
                         """,
                         [
-                            username,
+                            new_user.username,
                             hashed_password,
+                            new_user.first_name,
+                            new_user.last_name,
+                            new_user.email,
                         ],
                     )
                     user = cur.fetchone()
                     if not user:
                         raise UserDatabaseException(
-                            f"Could not create user with username {username}"
+                            f"Could not create user with username {new_user.username}"
                         )
-        except psycopg.Error:
+        except psycopg.Error as e:
+            print (e)
             raise UserDatabaseException(
-                f"Could not create user with username {username}"
+                f"Could not create user with username {new_user.username}"
             )
         return user
