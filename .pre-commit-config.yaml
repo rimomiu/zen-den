@@ -1,0 +1,28 @@
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.5.0
+      hooks:
+          - id: check-yaml
+    - repo: https://github.com/PyCQA/flake8
+      rev: 7.0.0
+      hooks:
+          - id: flake8
+            exclude: migrations
+    - repo: https://github.com/pre-commit/mirrors-eslint
+      rev: v8.45.0 # should match eslint ver in ghi/package.json
+      hooks:
+          - id: eslint
+            additional_dependencies:
+                - eslint@8.45.0
+                - eslint-plugin-react@7.32.2
+                - eslint-plugin-react-hooks@4.6.0
+                - eslint-plugin-react-refresh@0.4.3
+            exclude: node_modules
+            files: \.[j]sx?$ # *.js and *.jsx
+            types: [file]
+            args: [--report-unused-disable-directives, --max-warnings=0, --fix]
+    - repo: https://github.com/psf/black
+      rev: 24.4.2
+      hooks:
+          - id: black
+            args: [--exclude, migrations]
