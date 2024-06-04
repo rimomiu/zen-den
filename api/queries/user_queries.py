@@ -107,9 +107,7 @@ class UserQueries:
                     )
                     user = cur.fetchone()
                     if not user:
-                        raise UserDatabaseException(
-                            f"Could not create user with username {new_user.username}"
-                        )
+                        raise UserDatabaseException(f"Could not create user with username {new_user.username}")
         except psycopg.Error as e:
             print(e)
             raise UserDatabaseException(
