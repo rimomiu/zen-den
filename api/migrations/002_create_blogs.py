@@ -12,7 +12,6 @@ steps = [
         );
         """,
         # "Down" SQL statement
-
         """
         DROP TABLE blogs;
         """,
@@ -20,13 +19,13 @@ steps = [
     [
         # "Up" SQL statement
         """
-        INSERT INTO blogs VALUES
-            (1, 'BigYogaButt', 'https://youaligned.com/wp-content/uploads/2022/11/yoga-poses-for-your-butt.jpg', 'Big yoga booty requires a lot of yoga', 1, '2024-05-29'),
-            (2, 'TheWorldNeedsYoga', 'https://insightssuccess.in/wp-content/uploads/2020/06/World-Yoga-Day-5-fitness-apps.jpg', 'The world needs yoga', 2,  '2024-06-29');
+        INSERT INTO blogs (title, pic_url, content, author_id, date_published) VALUES
+            ('BigYogaButt', 'https://youaligned.com/wp-content/uploads/2022/11/yoga-poses-for-your-butt.jpg', 'Big yoga booty requires a lot of yoga', 1, '2024-05-29'),
+            ('TheWorldNeedsYoga', 'https://insightssuccess.in/wp-content/uploads/2020/06/World-Yoga-Day-5-fitness-apps.jpg', 'The world needs yoga', 2,  '2024-06-29');
         """,
         # "Down" SQL statement
         """
         DROP TABLE blogs;
-        """
-    ]
+        """,
+    ],
 ]

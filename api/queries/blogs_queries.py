@@ -1,17 +1,16 @@
-from pydantic import BaseModel
+from utils.exceptions import BlogDatabaseException
+from models.blogs import CreateBlogs, BlogResponse, Blogs, Error
+import psycopg
+from psycopg.rows import class_row
 from typing import List, Union
 from queries.pool import pool
 
 
-class Error(BaseModel):
-    message: str
-
-
-class Blogs(BaseModel):
-    title: str
-    pic_url: str
-    content: str
-    author_id: int
+# class Blogs(BaseModel):
+#     title: str
+#     pic_url: str
+#     content: str
+#     author_id: int
 
 
 class BlogRepository:
@@ -39,7 +38,7 @@ class BlogRepository:
                     return result
 
         except Exception:
-            return {"message": "Could not get blogs"}
+            return Error("Could not get blogs")
 
     def update(self, blog_id: int, blog: Blogs) -> Union[Blogs, Error]:
         try:
@@ -59,4 +58,38 @@ class BlogRepository:
                     return Blogs(id=blog_id, **old_blog_data)
         except Exception as e:
             print(e)
-            return {"message": "Could not update blog"}
+            return Error("Could not update blog")
+
+    def create_blogs(self, blogs: CreateBlogs) -> BlogResponse:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(BlogResponse)) as cur:
+                    cur.execute(
+                        """
+                        INSERT INTO blogs (
+                            title,
+                            author_id,
+                            pic_url,
+                            content,
+                            date_published
+                        ) VALUES (
+                            %s, %s, %s, %s, %s
+                        )
+                        RETURNING *;
+                        """,
+                        [
+                            blogs.title,
+                            blogs.author_id,
+                            blogs.pic_url,
+                            blogs.content,
+                            blogs.date_published,
+                        ],
+                    )
+
+                    blogs = cur.fetchone()
+                    if not blogs:
+                        raise BlogDatabaseException("Couldn't create blogs")
+        except psycopg.Error as e:
+            print(e)
+            raise BlogDatabaseException("Couldn't create blogs")
+        return blogs

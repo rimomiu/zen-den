@@ -18,14 +18,13 @@ steps = [
     [
         # "Up" SQL statement
         """
-        INSERT INTO comments VALUES
-            (1, 'I need this in my life!', 1, 1, '2024-05-30'),
-            (2, 'No way, the world needs Tai Chi insted!', 1, 1, '2024-06-30');
+        INSERT INTO comments (body, blog_id, author_id, date_published) VALUES
+            ('I need this in my life!', 1, 1, '2024-05-30'),
+            ('No way, the world needs Tai Chi insted!', 1, 1, '2024-06-30');
         """,
         # "Down" SQL statement
         """
         DROP TABLE comments;
-        """
-    ]
-
+        """,
+    ],
 ]
