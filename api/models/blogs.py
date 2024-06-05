@@ -25,3 +25,14 @@ class BlogResponse(BaseModel):
     content: str
     date_published: datetime
     blog_id: int
+
+
+class Blogs(BaseModel):
+    title: str
+    pic_url: str
+    content: str
+    author_id: int
+
+
+class Error(BaseModel):
+    message: str

@@ -1,23 +1,8 @@
-from fastapi import (
-    # Depends,
-    # Request,
-    # Response,
-    # HTTPException,
-    # status,
-    APIRouter,
-)
+from fastapi import APIRouter, Depends
+from queries.blogs_queries import BlogRepository
+from models.blogs import Blogs, CreateBlogs, Error
+from typing import List, Union
 
-# from queries.blogs_queries import BlogQueries
-
-
-from models.blogs import CreateBlogs
-
-# from utils.authentication import (
-#     try_get_jwt_user_data,
-#     hash_password,
-#     generate_jwt,
-#     verify_password,
-# )
 
 router = APIRouter()
 
@@ -25,3 +10,10 @@ router = APIRouter()
 @router.post("/blogs")
 def create_blogs(blog: CreateBlogs):
     return blog
+
+
+@router.get("/blogs", response_model=Union[Error, List[Blogs]])
+def get_blogs(
+    repo: BlogRepository = Depends(),
+):
+    return repo.get_blogs()
