@@ -8,6 +8,7 @@ steps = [
             last_name VARCHAR(100) NOT NULL,
             username VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(256) NOT NULL,
+            email VARCHAR(100) NOT NULL UNIQUE,
             admin BOOLEAN NOT NULL DEFAULT false
         );
         """,

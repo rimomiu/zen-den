@@ -1,10 +1,13 @@
-from fastapi import APIRouter
-from queries.blogs_queries import Blogs
+from fastapi import APIRouter, Depends
+from typing import List, Union
+from queries.blogs_queries import Blogs, BlogRepository, Error
 
 
 router = APIRouter()
 
 
-@router.post("/blogs")
-def create_blogs(blog: Blogs):
-    return blog
+@router.get("/blogs", response_model=Union[Error, List[Blogs]])
+def get_blogs(
+    repo: BlogRepository = Depends(),
+):
+    return repo.get_blogs()
