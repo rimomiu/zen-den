@@ -1,5 +1,5 @@
 from utils.exceptions import BlogDatabaseException
-from models.blogs import CreateBlogs, BlogResponse, Blogs, Error
+from models.blogs import CreateBlogs, BlogResponse, Blogs, Error, BlogUpdate
 import psycopg
 from psycopg.rows import class_row
 from typing import List, Union
@@ -40,7 +40,9 @@ class BlogRepository:
         except Exception:
             return Error("Could not get blogs")
 
-    def update(self, blog_id: int, blog: Blogs) -> Union[Blogs, Error]:
+    def update(
+        self, blog_id: int, blog: BlogUpdate
+    ) -> Union[BlogResponse, Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -51,11 +53,23 @@ class BlogRepository:
                     , pic_url = %s
                     , content = %s
                     WHERE blog_id = %s
+                    RETURNING *;
                     """,
                         [blog.title, blog.pic_url, blog.content, blog_id],
                     )
-                    old_blog_data = blog.dict()
-                    return Blogs(id=blog_id, **old_blog_data)
+                    updated_blog = db.fetchone()
+                    print(updated_blog)
+                    if updated_blog:
+                        return BlogResponse(
+                            blog_id=updated_blog[0],
+                            title=updated_blog[1],
+                            pic_url=updated_blog[2],
+                            content=updated_blog[3],
+                            author_id=updated_blog[4],
+                            date_published=updated_blog[5],
+                        )
+                    else:
+                        return Error("Blog not found")
         except Exception as e:
             print(e)
             return Error("Could not update blog")
@@ -93,3 +107,19 @@ class BlogRepository:
             print(e)
             raise BlogDatabaseException("Couldn't create blogs")
         return blogs
+
+    def delete(self, blog_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                    DELETE From blogs
+                    WHERE blog_id = %s
+                    """,
+                        [blog_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False

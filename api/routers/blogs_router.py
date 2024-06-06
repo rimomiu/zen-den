@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from queries.blogs_queries import BlogRepository
-from models.blogs import Blogs, CreateBlogs, Error, BlogResponse
+from models.blogs import Blogs, CreateBlogs, Error, BlogResponse, BlogUpdate
 from typing import List, Union
 
 
@@ -18,3 +18,20 @@ def get_blogs(
     repo: BlogRepository = Depends(),
 ):
     return repo.get_blogs()
+
+
+@router.put("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
+def update_blog(
+    blog_id: int,
+    blog: BlogUpdate,
+    repo: BlogRepository = Depends(),
+) -> Union[BlogResponse, Error]:
+    return repo.update(blog_id, blog)
+
+
+@router.delete("/blogs/{blog_id}", response_model=bool)
+def delete_blog(
+    blog_id: int,
+    repo: BlogRepository = Depends(),
+) -> bool:
+    return repo.delete(blog_id)

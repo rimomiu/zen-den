@@ -37,3 +37,9 @@ class Blogs(BaseModel):
 
 class Error(BaseModel):
     message: str
+
+
+class BlogUpdate(BaseModel):
+    title: str
+    pic_url: str
+    content: str
