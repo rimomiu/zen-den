@@ -1,7 +1,5 @@
-from datetime import datetime
+from datetime import date
 from fastapi import FastAPI
-
-
 from pydantic import BaseModel
 
 # import os
@@ -11,10 +9,10 @@ app = FastAPI()
 
 class CreateBlogs(BaseModel):
     title: str
-    author_id: int
+    author_id: str
     pic_url: str
     content: str
-    date_published: datetime
+    date_published: date
 
 
 class BlogResponse(BaseModel):
@@ -22,7 +20,7 @@ class BlogResponse(BaseModel):
     author_id: int
     pic_url: str
     content: str
-    date_published: datetime
+    date_published: date
     blog_id: int
 
 
@@ -32,7 +30,7 @@ class Blogs(BaseModel):
     pic_url: str
     content: str
     author_id: int
-    date_published: datetime
+    date_published: date
 
 
 class Error(BaseModel):

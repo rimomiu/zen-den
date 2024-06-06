@@ -11,7 +11,7 @@ from queries.user_queries import (
 )
 
 from utils.exceptions import UserDatabaseException
-from models.users import UserRequest, UserResponse
+from models.users import UserSignIn, UserResponse, UserRequest
 
 from utils.authentication import (
     try_get_jwt_user_data,
@@ -66,7 +66,7 @@ async def signup(
 
 @router.post("/signin")
 async def signin(
-    user_request: UserRequest,
+    user_request: UserSignIn,
     request: Request,
     response: Response,
     queries: UserQueries = Depends(),

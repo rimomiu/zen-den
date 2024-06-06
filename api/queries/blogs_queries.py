@@ -6,13 +6,6 @@ from typing import List, Union
 from queries.pool import pool
 
 
-# class Blogs(BaseModel):
-#     title: str
-#     pic_url: str
-#     content: str
-#     author_id: int
-
-
 class BlogRepository:
     def get_blogs(self) -> Union[Error, List[Blogs]]:
         try:
@@ -58,7 +51,6 @@ class BlogRepository:
                         [blog.title, blog.pic_url, blog.content, blog_id],
                     )
                     updated_blog = db.fetchone()
-                    print(updated_blog)
                     if updated_blog:
                         return BlogResponse(
                             blog_id=updated_blog[0],
@@ -70,6 +62,8 @@ class BlogRepository:
                         )
                     else:
                         return Error("Blog not found")
+                    # old_blog_data = blog.dict()
+                    # return Blogs(id=blog_id, **old_blog_data)
         except Exception as e:
             print(e)
             return Error("Could not update blog")
