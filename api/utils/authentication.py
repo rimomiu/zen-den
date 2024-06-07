@@ -7,7 +7,8 @@ from fastapi import Cookie
 from jose import JWTError, jwt
 from jose.constants import ALGORITHMS
 from typing import Annotated, Optional
-from models.jwt import JWTPayload, JWTUserData
+from models.jwt import JWTPayload
+from models.users import UserResponse
 
 from queries.user_queries import UserWithPw
 
@@ -32,7 +33,9 @@ async def decode_jwt(token: str) -> Optional[JWTPayload]:
 
 async def try_get_jwt_user_data(
     fast_api_token: Annotated[str | None, Cookie()] = None,
-) -> Optional[JWTUserData]:
+) -> Optional[UserResponse]:
+    # code above says fastapi token is supposed to be a cookie but
+    # if there's not cookie, have it be a string that's None
     # """
     # This function can be dependency injected into a route
 
@@ -96,9 +99,7 @@ def generate_jwt(user: UserWithPw) -> str:
     # """
     exp = timegm((datetime.utcnow() + timedelta(hours=1)).utctimetuple())
     jwt_data = JWTPayload(
-        exp=exp,
-        sub=user.username,
-        user=JWTUserData(username=user.username, id=user.user_id),
+        exp=exp, sub=user.username, user=UserResponse(**user.model_dump())
     )
     encoded_jwt = jwt.encode(
         jwt_data.model_dump(), SIGNING_KEY, algorithm=ALGORITHMS.HS256

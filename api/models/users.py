@@ -1,6 +1,11 @@
 from pydantic import BaseModel
 
 
+class UserSignIn(BaseModel):
+    username: str
+    password: str
+
+
 class UserRequest(BaseModel):
     # Represents a the parameters needed to create a new user
     username: str
