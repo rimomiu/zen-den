@@ -41,3 +41,10 @@ def update_comment(
     repo: CommentRepository = Depends(),
 ):
     return repo.update(comment_id, blog_id, update)
+
+
+@router.delete("/blogs/{blog_id}/comments/{comment_id}")
+def delete_comment(
+    comment_id: int, repo: CommentRepository = Depends()
+) -> bool:
+    return repo.delete(comment_id)
