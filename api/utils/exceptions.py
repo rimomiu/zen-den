@@ -5,3 +5,7 @@ class UserDatabaseException(Exception):
 
 class BlogDatabaseException(Exception):
     pass
+
+
+class CommentDatabaseException(Exception):
+    pass
