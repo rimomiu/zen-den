@@ -13,15 +13,13 @@ router = APIRouter()
 repo = CommentRepository()
 
 
-# List all comments
 @router.get(
     "/blogs/{blog_id}/comments", response_model=Union[Error, List[Comments]]
 )
-def get_comment(repo: CommentRepository = Depends()):
-    return repo.get_comment()
+def list_comments(repo: CommentRepository = Depends()):
+    return repo.list_comments()
 
 
-# Create/post a comment on a blog
 @router.post("/blogs/{blog_id}/comments", response_model=CommentResponse)
 def create_comment(
     comment: CreateComment, repo: CommentRepository = Depends()
@@ -29,7 +27,6 @@ def create_comment(
     return repo.create_comment(comment)
 
 
-# Update a comment
 @router.put(
     "/blogs/{blog_id}/comments/{comment_id}",
     response_model=Union[CommentResponse, Error],

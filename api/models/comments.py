@@ -38,3 +38,7 @@ class Error(BaseModel):
 
 class CommentUpdate(BaseModel):
     body: str
+
+
+class CommentUpdate(BaseModel):
+    body: str

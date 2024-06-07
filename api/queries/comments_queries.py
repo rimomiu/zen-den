@@ -13,7 +13,7 @@ from queries.pool import pool
 
 
 class CommentRepository:
-    def get_comment(self) -> Union[Error, List[Comments]]:
+    def list_comments(self) -> Union[Error, List[Comments]]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -39,7 +39,7 @@ class CommentRepository:
             print(e)
             return Error("Could not get comments")
 
-    def update(
+    def update_comment(
         self, comment_id: int, blog_id: int, comment: CommentUpdate
     ) -> Union[CommentResponse, Error]:
         try:
