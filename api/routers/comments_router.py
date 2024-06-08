@@ -48,3 +48,14 @@ def delete_comment(
     comment_id: int, repo: CommentRepository = Depends()
 ) -> bool:
     return repo.delete(comment_id)
+
+
+# @router.delete("/blogs/{blog_id}/comments/{comment_id}")
+# def delete_comment_by_user(author_id:int,repo:CommentRepository=Depends()
+#                            )->bool:
+#     return repo.delete(author_id)
+
+
+# @router.get("/blogs/{blog_id}/comments/{comment_id}",response_model=CommentResponse)
+# def retrieve_comment(repo: CommentRepository = Depends()):
+#     return repo.get_comment()
