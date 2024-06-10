@@ -147,7 +147,7 @@ Unit-Test UPDATE comment
 class TestUpdateCommentQueries:
     def update(
         self, comment_id: int, blog_id: int, update: CommentUpdate
-) -> CommentResponse:
+    ) -> CommentResponse:
         return CommentResponse(
             comment_id=comment_id,
             body=update.body,
