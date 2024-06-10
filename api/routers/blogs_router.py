@@ -24,6 +24,24 @@ def get_blogs(
     return repo.get_blogs()
 
 
+@router.get("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
+def get_blog(
+    blog_id: int,
+    repo: BlogRepository = Depends(),
+) -> Union[BlogResponse, Error]:
+    return repo.get_blog_by_id(blog_id)
+
+
+@router.get(
+    "/users/{author_id}/blogs", response_model=Union[Error, List[Blogs]]
+)
+def get_blog_by_author(
+    author_id: int,
+    repo: BlogRepository = Depends(),
+) -> Union[BlogResponse, Error]:
+    return repo.get_blog_by_username(author_id)
+
+
 @router.put("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
 def update_blog(
     blog_id: int,

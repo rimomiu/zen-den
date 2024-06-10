@@ -116,3 +116,20 @@ class UserQueries:
                 f"Couldn't create username {new_user.username}"
             )
         return user
+
+
+def delete(self, username: str) -> str:
+    try:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                        DELETE from users
+                        WHERE username = %s
+                        """,
+                    [username],
+                )
+                return f"Deleted profile of {username}"
+    except Exception as e:
+        print(e)
+        return "Could not delete"

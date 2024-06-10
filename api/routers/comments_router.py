@@ -13,13 +13,6 @@ router = APIRouter()
 repo = CommentRepository()
 
 
-@router.get(
-    "/blogs/{blog_id}/comments", response_model=Union[Error, List[Comments]]
-)
-def list_comments(repo: CommentRepository = Depends()):
-    return repo.list_comments()
-
-
 @router.post("/blogs/{blog_id}/comments", response_model=CommentResponse)
 def create_comment(
     comment: CreateComment, repo: CommentRepository = Depends()
@@ -45,3 +38,23 @@ def delete_comment(
     comment_id: int, repo: CommentRepository = Depends()
 ) -> bool:
     return repo.delete(comment_id)
+
+
+@router.get(
+    "/comments/users/{author_id}", response_model=Union[Error, List[Comments]]
+)
+def get_user_comments(
+    author_id: int,
+    repo: CommentRepository = Depends(),
+) -> Union[Comments, Error]:
+    return repo.get_comments_by_user(author_id)
+
+
+@router.get(
+    "/comments/{blog_id}/blogs", response_model=Union[Error, List[Comments]]
+)
+def get_blog_comments(
+    blog_id: int,
+    repo: CommentRepository = Depends(),
+) -> Union[Comments, Error]:
+    return repo.get_comments_by_blog_id(blog_id)

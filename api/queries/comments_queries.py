@@ -8,6 +8,7 @@ from models.comments import (
 )
 import psycopg
 from psycopg.rows import class_row
+
 from typing import List, Union
 from queries.pool import pool
 
