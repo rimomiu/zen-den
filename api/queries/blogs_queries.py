@@ -29,9 +29,65 @@ class BlogRepository:
                         )
                         result.append(blog)
                     return result
-
         except Exception:
             return Error("Could not get blogs")
+
+    def get_blog_by_username(
+        self, author_id: int
+    ) -> Union[Error, List[Blogs]]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT * from blogs
+                        WHERE author_id = %s
+                        """,
+                        [author_id],
+                    )
+                    result = []
+                    for record in db:
+                        blog = Blogs(
+                            blog_id=record[0],
+                            title=record[1],
+                            pic_url=record[2],
+                            content=record[3],
+                            author_id=record[4],
+                            date_published=record[5],
+                        )
+                        result.append(blog)
+                    return result
+        except Exception:
+            return Error("Could not get blog")
+
+    def get_blog_by_id(
+        self, blog_id: int, blog=Blogs
+    ) -> Union[BlogResponse, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        SELECT * from blogs
+                        WHERE blog_id = %s
+                        """,
+                        [blog_id],
+                    )
+                    record = db.fetchone()
+                    if record:
+                        return Blogs(
+                            blog_id=record[0],
+                            title=record[1],
+                            pic_url=record[2],
+                            content=record[3],
+                            author_id=record[4],
+                            date_published=record[5],
+                        )
+                    else:
+                        return Error("Blog not found")
+
+        except Exception:
+            return Error("Could not get blog")
 
     def update(
         self, blog_id: int, blog: BlogUpdate

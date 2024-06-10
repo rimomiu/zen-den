@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from fastapi import FastAPI
 
 
@@ -13,14 +13,14 @@ class CreateComment(BaseModel):
     body: str
     blog_id: int
     author_id: int
-    date_published: datetime
+    date_published: date
 
 
 class CommentResponse(BaseModel):
     body: str
     blog_id: int
     author_id: int
-    date_published: datetime
+    date_published: date
     comment_id: int
 
 
@@ -29,7 +29,7 @@ class Comments(BaseModel):
     body: str
     blog_id: int
     author_id: int
-    date_published: datetime
+    date_published: date
 
 
 class Error(BaseModel):
