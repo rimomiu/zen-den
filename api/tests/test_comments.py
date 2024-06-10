@@ -1,7 +1,13 @@
 from main import app
 from fastapi.testclient import TestClient
 from queries.comments_queries import CommentRepository
-from models.comments import CommentResponse, CommentUpdate
+from models.comments import (
+    CommentResponse,
+    CreateComment,
+    Comments,
+    CommentUpdate,
+)
+from typing import List
 
 
 client = TestClient(app)
@@ -17,24 +23,79 @@ def test_init():
 
 
 """
-Unit-Test GET comments
+Unit-Test GET user comments
 """
 
 
-class EmptyCommentsQueries:
-    def list_comments(self):
-        return []
+class TestGetUserCommentsQueries:
+    def get_comments_by_user(self, author_id: int) -> List[Comments]:
+        return [
+            Comments(
+                comment_id=1,
+                body="First comment lol",
+                blog_id=1,
+                author_id=author_id,
+                date_published="2024-06-06",
+            )
+        ]
 
 
-def test_get_all_comments():
-    app.dependency_overrides[CommentRepository] = EmptyCommentsQueries
+def test_get_user_comments():
+    app.dependency_overrides[CommentRepository] = TestGetUserCommentsQueries
 
-    response = client.get("/blogs/{blog_id}/comments")
+    expected = [
+        {
+            "comment_id": 1,
+            "body": "First comment lol",
+            "blog_id": 1,
+            "author_id": 1,
+            "date_published": "2024-06-06",
+        }
+    ]
 
+    response = client.get("/comments/users/1")
     app.dependency_overrides = {}
 
     assert response.status_code == 200
-    assert response.json() == []
+    assert response.json() == expected
+
+
+"""
+Unit-Test GET blog comments
+"""
+
+
+class TestGetBlogCommentsQueries:
+    def get_comments_by_blog_id(self, blog_id: int) -> List[Comments]:
+        return [
+            Comments(
+                comment_id=1,
+                body="First comment lol",
+                blog_id=blog_id,
+                author_id=1,
+                date_published="2024-06-06",
+            )
+        ]
+
+
+def test_get_blog_comments():
+    app.dependency_overrides[CommentRepository] = TestGetBlogCommentsQueries
+
+    expected = [
+        {
+            "comment_id": 1,
+            "body": "First comment lol",
+            "blog_id": 1,
+            "author_id": 1,
+            "date_published": "2024-06-06",
+        }
+    ]
+
+    response = client.get("/comments/1/blogs")
+    app.dependency_overrides = {}
+
+    assert response.status_code == 200
+    assert response.json() == expected
 
 
 """
@@ -43,7 +104,7 @@ Unit-Test POST comment
 
 
 class TestCommentQueries:
-    def create_comment(self, comment):
+    def create_comment(self, comment: CreateComment) -> CommentResponse:
         comment = CommentResponse(
             comment_id=1,
             body=comment.body,
@@ -61,17 +122,17 @@ def test_create_comment():
         "body": "I love yoga, but I can't even touch my toes!",
         "blog_id": 1,
         "author_id": 1,
-        "date_published": "2024-06-06T00:00:00",
+        "date_published": "2024-06-06",
     }
     expected = {
         "comment_id": 1,
         "body": "I love yoga, but I can't even touch my toes!",
         "blog_id": 1,
         "author_id": 1,
-        "date_published": "2024-06-06T00:00:00",
+        "date_published": "2024-06-06",
     }
 
-    response = client.post("/blogs/{blog_id}/comments", json=json_data)
+    response = client.post("/blogs/1/comments", json=json_data)
     app.dependency_overrides = {}
 
     assert response.status_code == 200
@@ -84,13 +145,15 @@ Unit-Test UPDATE comment
 
 
 class TestUpdateCommentQueries:
-    def update(self, comment_id: int, blog_id: int, update: CommentUpdate):
+    def update(
+        self, comment_id: int, blog_id: int, update: CommentUpdate
+) -> CommentResponse:
         return CommentResponse(
             comment_id=comment_id,
             body=update.body,
             blog_id=blog_id,
             author_id=1,
-            date_published="2024-06-06T00:00:00",
+            date_published="2024-06-06",
         )
 
 
@@ -103,7 +166,7 @@ def test_update_comment():
         "body": "Updated comment body",
         "blog_id": 1,
         "author_id": 1,
-        "date_published": "2024-06-06T00:00:00",
+        "date_published": "2024-06-06",
     }
 
     response = client.put("/blogs/1/comments/1", json=json_data)
