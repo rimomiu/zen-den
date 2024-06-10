@@ -14,33 +14,7 @@ from queries.pool import pool
 
 
 class CommentRepository:
-    def list_comments(self) -> Union[Error, List[Comments]]:
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as db:
-                    result = db.execute(
-                        """
-                        SELECT * FROM comments
-                        ORDER BY date_published
-                        """
-                    )
-                    result = []
-                    for record in db:
-                        comment = Comments(
-                            comment_id=record[0],
-                            body=record[1],
-                            blog_id=record[2],
-                            author_id=record[3],
-                            date_published=record[4],
-                        )
-                        result.append(comment)
-                    return result
-
-        except Exception as e:
-            print(e)
-            return Error("Could not get comments")
-
-    def update_comment(
+    def update(
         self, comment_id: int, blog_id: int, comment: CommentUpdate
     ) -> Union[CommentResponse, Error]:
         try:
