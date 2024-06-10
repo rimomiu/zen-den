@@ -59,13 +59,3 @@ def get_blog_comments(
     repo: CommentRepository = Depends(),
 ) -> Union[Comments, Error]:
     return repo.get_comments_by_blog_id(blog_id)
-
-
-@router.get(
-    "/blogs/{blog_id}/comments",
-    response_model=Union[Error, List[Comments]]
-)
-def list_comments(
-    repo: CommentRepository = Depends(),
-) -> Union[Error, List[Comments]]:
-    return repo.list_comments
