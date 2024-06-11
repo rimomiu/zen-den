@@ -1,4 +1,9 @@
+"""
+Pydantic Models for Users
+"""
+
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserSignIn(BaseModel):
@@ -31,3 +36,8 @@ class UserWithPw(UserRequest):
     user_id: int
     admin: bool
     # used to verify when the user is logging in
+
+
+class UserUpdate(BaseModel):
+    username: Optional[str]
+    email: Optional[str]
