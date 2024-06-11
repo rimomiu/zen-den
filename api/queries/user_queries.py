@@ -1,6 +1,7 @@
 """
 Database Queries for Users
 """
+
 import os
 import psycopg
 from psycopg_pool import ConnectionPool
@@ -161,10 +162,7 @@ class UserQueries:
         return users
 
     def update_user(
-            self,
-            username: str,
-            email: str,
-            user_id: int
+        self, username: str, email: str, user_id: int
     ) -> Optional[UserUpdate]:
         """
         Update a user
@@ -179,7 +177,7 @@ class UserQueries:
                         WHERE user_id = %s
                         RETURNING *;
                         """,
-                        (username, email, user_id)
+                        (username, email, user_id),
                     )
                     user = cur.fetchone()
                     if not user:

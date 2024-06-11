@@ -1,6 +1,7 @@
 """
 User API Router
 """
+
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional, List
 from models.users import UserResponse, UserRequest, UserUpdate
@@ -65,7 +66,7 @@ async def delete_user(
 
 @router.get("/", response_model=List[UserResponse])
 async def list_all_users(
-    user_queries: UserQueries = Depends()
+    user_queries: UserQueries = Depends(),
 ) -> List[UserResponse]:
     """
     [GET] a list of all users in the database
@@ -84,8 +85,6 @@ def update_user(
     Update [PUT] username and email
     """
     updated_user = queries.update_user(
-        user.username,
-        user.email,
-        user_id=user_id
+        user.username, user.email, user_id=user_id
     )
     return updated_user

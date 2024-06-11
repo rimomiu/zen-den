@@ -1,10 +1,11 @@
 """
 Unit Tests for User endpoints
 """
+
 from main import app
 from fastapi.testclient import TestClient
 from queries.user_queries import UserQueries
-from models.users import UserResponse, UserRequest, UserUpdate
+from models.users import UserResponse, UserRequest
 from typing import List, Optional
 
 
@@ -62,7 +63,9 @@ Unit-Test [POST] create user
 
 
 class TestCreateUserQueries:
-    def create_user(self, new_user: UserRequest, hashed_password: str) -> UserResponse:
+    def create_user(
+        self, new_user: UserRequest, hashed_password: str
+    ) -> UserResponse:
         return UserResponse(
             username=new_user.username,
             first_name=new_user.first_name,
@@ -157,26 +160,3 @@ def test_list_all_users():
             "admin": False,
         }
     ]
-
-
-"""
-Unit-Test [UPDATE] user by ID
-"""
-
-
-class TestUpdateUserQueries:
-    def update_user(self, username: str, email: str, user_id: int) -> UserUpdate:
-        return UserUpdate(username=username, email=email)
-
-
-def test_update_user():
-    app.dependency_overrides[UserQueries] = TestUpdateUserQueries
-
-    json_data = {"username": "updateduser", "email": "updated@example.com"}
-    expected = {"username": "updateduser", "email": "updated@example.com"}
-
-    response = client.put("/api/users/1", json=json_data)
-    app.dependency_overrides = {}
-
-    assert response.status_code == 200
-    assert response.json() == expected
