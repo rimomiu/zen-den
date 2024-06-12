@@ -1,8 +1,5 @@
-// This makes VSCode check types as if you are using TypeScript
-//@ts-check
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
-// import ErrorNotification from './components/ErrorNotification'
+import BlogList from './components/BlogList'
 import HomePage from './components/Home'
 
 import './App.css'
@@ -10,11 +7,12 @@ import './App.css'
 function App() {
     return (
         <BrowserRouter>
-            <div className="container">
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                </Routes>
-            </div>
+            {' '}
+            <h1>Vite + React</h1>
+            <Routes>
+                <Route path="/blogs" element={<BlogList />} />
+                <Route path="/" element={<HomePage />} />
+            </Routes>
         </BrowserRouter>
     )
 }

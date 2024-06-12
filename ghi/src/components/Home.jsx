@@ -50,7 +50,9 @@ function HomePage() {
                                 </span>
                             </span>
                         </div>
-                        <p className="mb-0 d-none d-xl-block small">Notification</p>
+                        <p className="mb-0 d-none d-xl-block small">
+                            Notification
+                        </p>
                     </div>
                 </a>
             </div>
