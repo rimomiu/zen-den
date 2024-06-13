@@ -16,7 +16,7 @@ if (!baseUrl) {
     The pattern used in these functions is called Errors as values.
     You can see these functions do not *throw* new errors, but instead
     return them.  This means instead of using try catch when we call them
-    we can instead use `instanceof`. 
+    we can instead use `instanceof`.
 
     This allows you to keep the happy path to the left, which makes
     the code more readable than try catch
@@ -61,7 +61,7 @@ export async function authenticate() {
     }
 
     // Check if the result has the required properties
-    if (typeof result.id !== 'number' || typeof result.username !== 'string') {
+    if (typeof result.user_id !== 'number' || typeof result.username !== 'string') {
         return new Error('Invalid user data')
     }
 
@@ -93,7 +93,7 @@ export async function signup(signUpRequest) {
         const result = await res.json()
 
         if (
-            typeof result.id !== 'number' ||
+            typeof result.user_id !== 'number' ||
             typeof result.username !== 'string'
         ) {
             throw new Error('Invalid user data')
@@ -137,7 +137,7 @@ export async function signin(signInRequest) {
         // This is validating our JSON response to make sure
         // It's got the correct types.
         if (
-            typeof result.id !== 'number' ||
+            typeof result.user_id !== 'number' ||
             typeof result.username !== 'string'
         ) {
             return new Error('Invalid user data')
