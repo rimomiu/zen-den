@@ -3,6 +3,7 @@
 Unit-Tests for main CRUD operations for comments
 #5 Endpoints => #5 Unit Tests + #1 Base Case
 """
+
 from main import app
 from fastapi.testclient import TestClient
 from queries.comments_queries import CommentRepository
@@ -11,7 +12,7 @@ from models.comments import (
     CreateComment,
     Comments,
     CommentUpdate,
-    Error
+    Error,
 )
 from typing import List, Union
 
@@ -30,6 +31,7 @@ class TestGetUserCommentsQueries:
     """
     Unit-Test [GET] user comments
     """
+
     def get_comments_by_user(self, author_id: int) -> List[Comments]:
         return [
             Comments(
@@ -66,6 +68,7 @@ class TestGetBlogCommentsQueries:
     """
     Unit-Test [GET] blog comments
     """
+
     def get_comments_by_blog_id(self, blog_id: int) -> List[Comments]:
         return [
             Comments(
@@ -102,6 +105,7 @@ class TestCommentQueries:
     """
     Unit-Test POST a comment
     """
+
     def create_comment(self, comment: CreateComment) -> CommentResponse:
         comment = CommentResponse(
             comment_id=1,
@@ -141,6 +145,7 @@ class TestUpdateCommentQueries:
     """
     Unit-Test UPDATE comment
     """
+
     def update(
         self, comment_id: int, blog_id: int, update: CommentUpdate
     ) -> CommentResponse:
@@ -176,6 +181,7 @@ class TestDeleteCommentQueries:
     """
     Unit Test DELETE comment
     """
+
     def delete(self, comment_id: int) -> bool:
         return True
 
@@ -198,16 +204,22 @@ Unit-Test Error Handling
 
 
 class TestErrorHandlingQueries:
-    def get_comments_by_blog_id(self, blog_id: int) -> Union[Error, List[Comments]]:
+    def get_comments_by_blog_id(
+        self, blog_id: int
+    ) -> Union[Error, List[Comments]]:
         raise Exception("Database error")
 
-    def get_comments_by_user(self, author_id: int) -> Union[Error, List[Comments]]:
+    def get_comments_by_user(
+        self, author_id: int
+    ) -> Union[Error, List[Comments]]:
         raise Exception("Database error")
 
     def create_comment(self, comment: CreateComment) -> CommentResponse:
         raise Exception("Database error")
 
-    def update(self, comment_id: int, blog_id: int, update: CommentUpdate) -> Union[CommentResponse, Error]:
+    def update(
+        self, comment_id: int, blog_id: int, update: CommentUpdate
+    ) -> Union[CommentResponse, Error]:
         raise Exception("Database error")
 
     def delete(self, comment_id: int) -> bool:
@@ -314,6 +326,8 @@ def test_update_comment_validation_error():
 Unit-Test Boundary Conditions
 #1 Boundary => #1 Unit Test
 """
+
+
 def test_create_comment_empty_body():
     app.dependency_overrides[CommentRepository] = TestCommentQueries
 

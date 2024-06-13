@@ -3,6 +3,7 @@
 Unit Tests for main CRUD operations for Users
 #6 Endpoints => #6 Unit Tests + #1 Base Case
 """
+
 from main import app
 from fastapi.testclient import TestClient
 from queries.user_queries import UserQueries
@@ -24,6 +25,7 @@ class TestGetUserByUsernameQueries:
     """
     Unit-Test [GET] user by username
     """
+
     def get_by_username(self, username: str) -> Optional[UserResponse]:
         if username == "testuser":
             return UserResponse(
@@ -58,6 +60,7 @@ class TestGetUserByIdQueries:
     """
     Unit-Test [GET] user by ID
     """
+
     def get_by_id(self, user_id: int) -> Optional[UserResponse]:
         if user_id == 1:
             return UserResponse(
@@ -92,6 +95,7 @@ class TestCreateUserQueries:
     """
     Unit-Test [POST] create user
     """
+
     def create_user(
         self, new_user: UserRequest, hashed_password: str
     ) -> UserResponse:
@@ -135,6 +139,7 @@ class TestDeleteUserQueries:
     """
     Unit-Test [DELETE] user by username
     """
+
     def delete(self, username: str) -> str:
         if username == "testuser":
             return "Deleted profile of testuser"
@@ -155,6 +160,7 @@ class TestListAllUsersQueries:
     """
     Unit-Test [GET] all users
     """
+
     def list_all_users(self) -> List[UserResponse]:
         return [
             UserResponse(
@@ -191,7 +197,10 @@ class TestUpdateUserQueries:
     """
     Unit-Test [PUT] update user
     """
-    def update_user(self, username: str, email: str, user_id: int) -> UserUpdate:
+
+    def update_user(
+        self, username: str, email: str, user_id: int
+    ) -> UserUpdate:
         return UserUpdate(
             username=username,
             email=email,
