@@ -21,11 +21,11 @@ function Profile() {
     return (
         <>
             <div>
-                <h1 class="title-pen"> User Profile </h1>
-                <div class="user-profile">
-                    <div class="username">{users.username}</div>
-                    <div class="user_id">{users.user_id}</div>
-                    <div class="description"></div>
+                <h1 className="title-pen"> User Profile </h1>
+                <div className="user-profile">
+                    <div className="username">{users.username}</div>
+                    <div className="user_id">{users.user_id}</div>
+                    <div className="description"></div>
                 </div>
             </div>
         </>
