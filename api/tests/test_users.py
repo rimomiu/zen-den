@@ -197,7 +197,6 @@ class TestUpdateUserQueries:
     """
     Unit-Test [PUT] update user
     """
-
     def update_user(
         self, username: str, email: str, user_id: int
     ) -> UserUpdate:

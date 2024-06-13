@@ -58,7 +58,7 @@ async def delete_user(
     """
     [DELETE] User by username
     """
-    deleted = user_queries.delete(username)
+    deleted = user_queries.delete_user(username)
     if deleted != f"Deleted profile of {username}":
         raise HTTPException(status_code=404, detail="User not found")
     return deleted
