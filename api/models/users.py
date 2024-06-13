@@ -43,5 +43,12 @@ class UserUpdate(BaseModel):
     email: Optional[str]
 
 
+class UserAsAuthor(BaseModel):
+    user_id: int
+    username: str
+    first_name: str
+    last_name: str
+
+
 class Error(BaseModel):
     message: str
