@@ -7,8 +7,9 @@ import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
 import App from './App'
 import AuthProvider from './components/AuthProvider'
-
+import BlogDetail from './components/BlogDetail'
 import './index.css'
+import Profile from './components/Profile'
 
 const BASE_URL = import.meta.env.BASE_URL
 if (!BASE_URL) {
@@ -28,6 +29,14 @@ const router = createBrowserRouter(
                 {
                     path: 'signin',
                     element: <SignInForm />,
+                },
+                {
+                    path: 'profile/:userId',
+                    element: <Profile />,
+                },
+                {
+                    path: 'blogs/:blogId',
+                    element: <BlogDetail />,
                 },
             ],
         },

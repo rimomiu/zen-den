@@ -17,7 +17,10 @@ export {}
  */
 /**
  * @typedef {Object} SignUpRequest
+ * @property {string} firstname
+ * @property {string} lastname
  * @property {string} username
+ * @property {string} email
  * @property {string} password
  */
 /**
