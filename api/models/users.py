@@ -41,3 +41,7 @@ class UserWithPw(UserRequest):
 class UserUpdate(BaseModel):
     username: Optional[str]
     email: Optional[str]
+
+
+class Error(BaseModel):
+    message: str

@@ -1,32 +1,29 @@
 """
-Unit Tests for User endpoints
+******************************************************************
+Unit Tests for main CRUD operations for Users
+#6 Endpoints => #6 Unit Tests + #1 Base Case
 """
-
 from main import app
 from fastapi.testclient import TestClient
 from queries.user_queries import UserQueries
-from models.users import UserResponse, UserRequest
+from models.users import UserResponse, UserRequest, UserUpdate
 from typing import List, Optional
 
 
 client = TestClient(app)
 
 
-"""
-Unit-Test Base Case
-"""
-
-
 def test_init():
+    """
+    Unit-Test Base Case
+    """
     assert 1 == 1
 
 
-"""
-Unit-Test [GET] user by username
-"""
-
-
 class TestGetUserByUsernameQueries:
+    """
+    Unit-Test [GET] user by username
+    """
     def get_by_username(self, username: str) -> Optional[UserResponse]:
         if username == "testuser":
             return UserResponse(
@@ -43,7 +40,7 @@ class TestGetUserByUsernameQueries:
 def test_get_user_by_username():
     app.dependency_overrides[UserQueries] = TestGetUserByUsernameQueries
 
-    response = client.get("/api/users/testuser")
+    response = client.get("/users/testuser")
     app.dependency_overrides = {}
 
     assert response.status_code == 200
@@ -57,12 +54,44 @@ def test_get_user_by_username():
     }
 
 
-"""
-Unit-Test [POST] create user
-"""
+class TestGetUserByIdQueries:
+    """
+    Unit-Test [GET] user by ID
+    """
+    def get_by_id(self, user_id: int) -> Optional[UserResponse]:
+        if user_id == 1:
+            return UserResponse(
+                username="testuser",
+                first_name="Test",
+                last_name="User",
+                email="testuser@example.com",
+                user_id=1,
+                admin=False,
+            )
+        return None
+
+
+def test_get_user_by_id():
+    app.dependency_overrides[UserQueries] = TestGetUserByIdQueries
+
+    response = client.get("/users/id/1")
+    app.dependency_overrides = {}
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "username": "testuser",
+        "first_name": "Test",
+        "last_name": "User",
+        "email": "testuser@example.com",
+        "user_id": 1,
+        "admin": False,
+    }
 
 
 class TestCreateUserQueries:
+    """
+    Unit-Test [POST] create user
+    """
     def create_user(
         self, new_user: UserRequest, hashed_password: str
     ) -> UserResponse:
@@ -95,19 +124,17 @@ def test_create_user():
         "admin": False,
     }
 
-    response = client.post("/api/users/", json=json_data)
+    response = client.post("/users", json=json_data)
     app.dependency_overrides = {}
 
     assert response.status_code == 200
     assert response.json() == expected
 
 
-"""
-Unit-Test [DELETE] user by username
-"""
-
-
 class TestDeleteUserQueries:
+    """
+    Unit-Test [DELETE] user by username
+    """
     def delete(self, username: str) -> str:
         if username == "testuser":
             return "Deleted profile of testuser"
@@ -117,19 +144,17 @@ class TestDeleteUserQueries:
 def test_delete_user():
     app.dependency_overrides[UserQueries] = TestDeleteUserQueries
 
-    response = client.delete("/api/users/testuser")
+    response = client.delete("/users/testuser")
     app.dependency_overrides = {}
 
     assert response.status_code == 200
     assert response.json() == "Deleted profile of testuser"
 
 
-"""
-Unit-Test [GET] all users
-"""
-
-
 class TestListAllUsersQueries:
+    """
+    Unit-Test [GET] all users
+    """
     def list_all_users(self) -> List[UserResponse]:
         return [
             UserResponse(
@@ -146,7 +171,7 @@ class TestListAllUsersQueries:
 def test_list_all_users():
     app.dependency_overrides[UserQueries] = TestListAllUsersQueries
 
-    response = client.get("/api/users/")
+    response = client.get("/users")
     app.dependency_overrides = {}
 
     assert response.status_code == 200
@@ -160,3 +185,33 @@ def test_list_all_users():
             "admin": False,
         }
     ]
+
+
+class TestUpdateUserQueries:
+    """
+    Unit-Test [PUT] update user
+    """
+    def update_user(self, username: str, email: str, user_id: int) -> UserUpdate:
+        return UserUpdate(
+            username=username,
+            email=email,
+        )
+
+
+def test_update_user():
+    app.dependency_overrides[UserQueries] = TestUpdateUserQueries
+
+    json_data = {
+        "username": "updateduser",
+        "email": "updateduser@example.com",
+    }
+    expected = {
+        "username": "updateduser",
+        "email": "updateduser@example.com",
+    }
+
+    response = client.put("/users/1", json=json_data)
+    app.dependency_overrides = {}
+
+    assert response.status_code == 200
+    assert response.json() == expected

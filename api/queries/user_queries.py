@@ -62,7 +62,7 @@ class UserQueries:
         try:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(UserWithPw)) as cur:
-                    cur. execute(
+                    cur.execute(
                         """
                             SELECT
                                 *
