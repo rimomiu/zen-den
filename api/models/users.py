@@ -31,3 +31,10 @@ class UserWithPw(UserRequest):
     user_id: int
     admin: bool
     # used to verify when the user is logging in
+
+
+class UserAsAuthor(BaseModel):
+    user_id: int
+    username: str
+    first_name: str
+    last_name: str
