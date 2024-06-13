@@ -41,3 +41,10 @@ class UserWithPw(UserRequest):
 class UserUpdate(BaseModel):
     username: Optional[str]
     email: Optional[str]
+
+
+class UserAsAuthor(BaseModel):
+    user_id: int
+    username: str
+    first_name: str
+    last_name: str

@@ -1,68 +1,94 @@
 from utils.exceptions import BlogDatabaseException
-from models.blogs import CreateBlogs, BlogResponse, Blogs, Error, BlogUpdate
+from models.blogs import (
+    CreateBlogs,
+    BlogResponse,
+    Blogs,
+    Error,
+    BlogUpdate,
+    BlogAuthorResponse,
+)
 import psycopg
 from psycopg.rows import class_row
 from typing import List, Union
 from queries.pool import pool
+from models.users import UserAsAuthor
 
 
+# This function gets the whole list of blogs and
+# allows us to get the username of the authors who wrote the blogs
 class BlogRepository:
-    def get_blogs(self) -> Union[Error, List[Blogs]]:
+    def create_blogs(self, blogs: CreateBlogs) -> BlogResponse:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor(row_factory=class_row(BlogResponse)) as cur:
+                    cur.execute(
+                        """
+                        INSERT INTO blogs (
+                            title,
+                            author_id,
+                            pic_url,
+                            content,
+                            date_published
+                        ) VALUES (
+                            %s, %s, %s, %s, %s
+                        )
+                        RETURNING *;
+                        """,
+                        [
+                            blogs.title,
+                            blogs.author_id,
+                            blogs.pic_url,
+                            blogs.content,
+                            blogs.date_published,
+                        ],
+                    )
+
+                    blogs = cur.fetchone()
+                    if not blogs:
+                        raise BlogDatabaseException("Couldn't create blogs")
+        except psycopg.Error as e:
+            print(e)
+            raise BlogDatabaseException("Couldn't create blogs")
+        return blogs
+
+    def get_blogs(self) -> Union[Error, List[BlogAuthorResponse]]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                        SELECT * FROM blogs
+                        SELECT b.*, u.username, u.first_name, u.last_name
+                        FROM blogs AS b
+                        JOIN users AS u
+                        ON u.user_id = b.author_id
                         ORDER BY date_published
                         """
                     )
                     result = []
                     for record in db:
-                        blog = Blogs(
+                        user = UserAsAuthor(
+                            user_id=record[4],
+                            username=record[6],
+                            first_name=record[7],
+                            last_name=record[8],
+                        )
+                        blog = BlogAuthorResponse(
                             blog_id=record[0],
                             title=record[1],
                             pic_url=record[2],
                             content=record[3],
                             author_id=record[4],
                             date_published=record[5],
+                            user=user,
                         )
                         result.append(blog)
                     return result
-        except Exception:
+        except Exception as e:
+            print(e)
             return Error("Could not get blogs")
 
-    def get_blog_by_username(
-        self, author_id: int
-    ) -> Union[Error, List[Blogs]]:
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as db:
-                    result = db.execute(
-                        """
-                        SELECT * from blogs
-                        WHERE author_id = %s
-                        """,
-                        [author_id],
-                    )
-                    result = []
-                    for record in db:
-                        blog = Blogs(
-                            blog_id=record[0],
-                            title=record[1],
-                            pic_url=record[2],
-                            content=record[3],
-                            author_id=record[4],
-                            date_published=record[5],
-                        )
-                        result.append(blog)
-                    return result
-        except Exception:
-            return Error("Could not get blog")
-
-    def get_blog_by_id(
-        self, blog_id: int, blog=Blogs
-    ) -> Union[BlogResponse, Error]:
+    # This function lets us get a specific blog using blog_id
+    def get_blog_by_blog_id(self, blog_id: int) -> Union[BlogResponse, Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -86,6 +112,34 @@ class BlogRepository:
                     else:
                         return Error("Blog not found")
 
+        except Exception:
+            return Error("Could not get blog")
+
+    # this function lets us get the list of
+    # blogs written by a user using author_id
+    def get_blog_by_user_id(self, author_id: int) -> Union[Error, List[Blogs]]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT * from blogs
+                        WHERE author_id = %s
+                        """,
+                        [author_id],
+                    )
+                    result = []
+                    for record in db:
+                        blog = Blogs(
+                            blog_id=record[0],
+                            title=record[1],
+                            pic_url=record[2],
+                            content=record[3],
+                            author_id=record[4],
+                            date_published=record[5],
+                        )
+                        result.append(blog)
+                    return result
         except Exception:
             return Error("Could not get blog")
 
@@ -123,40 +177,6 @@ class BlogRepository:
         except Exception as e:
             print(e)
             return Error("Could not update blog")
-
-    def create_blogs(self, blogs: CreateBlogs) -> BlogResponse:
-        try:
-            with pool.connection() as conn:
-                with conn.cursor(row_factory=class_row(BlogResponse)) as cur:
-                    cur.execute(
-                        """
-                        INSERT INTO blogs (
-                            title,
-                            author_id,
-                            pic_url,
-                            content,
-                            date_published
-                        ) VALUES (
-                            %s, %s, %s, %s, %s
-                        )
-                        RETURNING *;
-                        """,
-                        [
-                            blogs.title,
-                            blogs.author_id,
-                            blogs.pic_url,
-                            blogs.content,
-                            blogs.date_published,
-                        ],
-                    )
-
-                    blogs = cur.fetchone()
-                    if not blogs:
-                        raise BlogDatabaseException("Couldn't create blogs")
-        except psycopg.Error as e:
-            print(e)
-            raise BlogDatabaseException("Couldn't create blogs")
-        return blogs
 
     def delete(self, blog_id: int) -> bool:
         try:
