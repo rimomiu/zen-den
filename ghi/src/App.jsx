@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Nav from './Nav'
 import BlogList from './components/BlogList'
+// import PostBlog from './components/PostBlog'
 import HomePage from './components/Home'
 
 function App() {

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from queries.blogs_queries import BlogRepository
 from models.blogs import (
     Blogs,
@@ -8,7 +8,7 @@ from models.blogs import (
     BlogUpdate,
     BlogAuthorResponse,
 )
-from typing import List, Union
+from typing import List, Union, Optional
 from models.users import UserResponse
 from utils.authentication import try_get_jwt_user_data
 
@@ -62,5 +62,17 @@ def update_blog(
 def delete_blog(
     blog_id: int,
     repo: BlogRepository = Depends(),
-) -> bool:
-    return repo.delete(blog_id)
+    user: Optional[try_get_jwt_user_data] = Depends(try_get_jwt_user_data),
+):
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sign in to delete blog.",
+        )
+    success = repo.delete(blog_id)
+    if success:
+        return success
+    else:
+        raise HTTPException(
+            status_code=403, detail="Only authors can delete their blogs"
+        )
