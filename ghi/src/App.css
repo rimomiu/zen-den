@@ -2,9 +2,9 @@
 
 .App {
     text-align: center;
-    background-color: #282c34;
+    background-color: seagreen;
     min-height: 100vh;
-    color: white;
+    color: red;
     display: flex;
     flex-direction: column;
     align-items: center;

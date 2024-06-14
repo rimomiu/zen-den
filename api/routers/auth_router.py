@@ -12,6 +12,8 @@ from queries.user_queries import (
 
 from utils.exceptions import UserDatabaseException
 from models.users import UserSignIn, UserResponse, UserRequest
+from models.blogs import Error
+from typing import Union
 
 from utils.authentication import (
     try_get_jwt_user_data,
@@ -23,6 +25,23 @@ from utils.authentication import (
 # Note we are using a prefix here,
 # This saves us typing in all the routes below
 router = APIRouter(tags=["Authentication"], prefix="/api/auth")
+repo = UserQueries()
+
+
+@router.get("/profile/{username}", response_model=UserResponse)
+def get_profile(
+    username: str,
+    repo: UserQueries = Depends(),
+) -> Union[UserResponse, Error]:
+    return repo.get_by_username(username)
+
+
+@router.delete("/profile/{username}", response_model=str)
+def delete_profile(
+    username: str,
+    repo: UserQueries = Depends(),
+) -> str:
+    return repo.delete(username)
 
 
 @router.post("/signup")
