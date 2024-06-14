@@ -22,10 +22,13 @@ export {}
  * @property {string} username
  * @property {string} email
  * @property {string} password
+ * @property {string} first_name
+ * @property {string} last_name
+ * @property {string} email
  */
 /**
  * @typedef {Object} UserDataResponse
- * @property {number} id
+ * @property {number} user_id
  * @property {string} username
  * @property {string} email
  */

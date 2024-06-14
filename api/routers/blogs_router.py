@@ -1,6 +1,13 @@
 from fastapi import APIRouter, Depends
 from queries.blogs_queries import BlogRepository
-from models.blogs import Blogs, CreateBlogs, Error, BlogResponse, BlogUpdate
+from models.blogs import (
+    Blogs,
+    CreateBlogs,
+    Error,
+    BlogResponse,
+    BlogUpdate,
+    BlogAuthorResponse,
+)
 from typing import List, Union
 from models.users import UserResponse
 from utils.authentication import try_get_jwt_user_data
@@ -17,7 +24,7 @@ def create_blogs(
     return repo.create_blogs(blogs)
 
 
-@router.get("/blogs", response_model=Union[Error, List[Blogs]])
+@router.get("/blogs", response_model=Union[Error, List[BlogAuthorResponse]])
 def get_blogs(
     repo: BlogRepository = Depends(),
 ):
@@ -29,7 +36,7 @@ def get_blog(
     blog_id: int,
     repo: BlogRepository = Depends(),
 ) -> Union[BlogResponse, Error]:
-    return repo.get_blog_by_id(blog_id)
+    return repo.get_blog_by_blog_id(blog_id)
 
 
 @router.get(
@@ -39,7 +46,7 @@ def get_blog_by_author(
     author_id: int,
     repo: BlogRepository = Depends(),
 ) -> Union[BlogResponse, Error]:
-    return repo.get_blog_by_username(author_id)
+    return repo.get_blog_by_user_id(author_id)
 
 
 @router.put("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
