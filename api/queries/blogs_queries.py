@@ -138,8 +138,8 @@ class BlogRepository:
                             author_id=record[4],
                             date_published=record[5],
                         )
-                    result.append(blog)
-                return result
+                        result.append(blog)
+                    return result
         except Exception:
             return Error("Could not get blog")
 
