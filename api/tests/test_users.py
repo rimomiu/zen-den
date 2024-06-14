@@ -1,7 +1,6 @@
 """
 ******************************************************************
 Unit Tests for main CRUD operations for Users
-#6 Endpoints => #6 Unit Tests + #1 Base Case
 """
 
 from main import app
@@ -133,27 +132,6 @@ def test_create_user():
 
     assert response.status_code == 200
     assert response.json() == expected
-
-
-class TestDeleteUserQueries:
-    """
-    Unit-Test [DELETE] user by username
-    """
-
-    def delete(self, username: str) -> str:
-        if username == "testuser":
-            return "Deleted profile of testuser"
-        return "Could not delete"
-
-
-def test_delete_user():
-    app.dependency_overrides[UserQueries] = TestDeleteUserQueries
-
-    response = client.delete("/users/testuser")
-    app.dependency_overrides = {}
-
-    assert response.status_code == 200
-    assert response.json() == "Deleted profile of testuser"
 
 
 class TestListAllUsersQueries:

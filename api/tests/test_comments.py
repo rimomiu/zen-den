@@ -1,7 +1,6 @@
 """
 ******************************************************************
 Unit-Tests for main CRUD operations for comments
-#5 Endpoints => #5 Unit Tests + #1 Base Case
 """
 from main import app
 from fastapi.testclient import TestClient
