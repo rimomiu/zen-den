@@ -25,6 +25,16 @@ class BlogResponse(BaseModel):
     blog_id: int
 
 
+class BlogAuthorResponse(BaseModel):
+    title: str
+    author_id: int
+    pic_url: str
+    content: str
+    date_published: date
+    blog_id: int
+    user: UserAsAuthor
+
+
 class Blogs(BaseModel):
     blog_id: int
     title: str
