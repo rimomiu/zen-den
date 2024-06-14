@@ -13,7 +13,7 @@ from models.users import UserResponse
 from utils.authentication import try_get_jwt_user_data
 
 
-router = APIRouter()
+router = APIRouter(tags=["Blogs"])
 repo = BlogRepository()
 
 
@@ -40,7 +40,7 @@ def get_blog(
 
 
 @router.get(
-    "/users/{author_id}/blogs", response_model=Union[Error, List[Blogs]]
+    "/users/id/{author_id}/blogs", response_model=Union[Error, List[Blogs]]
 )
 def get_blog_by_author(
     author_id: int,
