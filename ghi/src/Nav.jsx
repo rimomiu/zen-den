@@ -32,6 +32,9 @@ function Nav() {
                     MyApp
                 </Typography>
                 <Stack direction="row" spacing={2}>
+                    <Button component={Link} to="/" color="inherit">
+                        Home
+                    </Button>
                     <Button component={Link} to="/blogs" color="inherit">
                         Blogs
                     </Button>
