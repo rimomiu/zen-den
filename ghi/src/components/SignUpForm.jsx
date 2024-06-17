@@ -35,7 +35,7 @@ export default function SignUpForm() {
     }
 
     if (user) {
-        return <Navigate to="/" />
+        return <Navigate to="/blogs" />
     }
 
     return (

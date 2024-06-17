@@ -2,6 +2,7 @@
 ******************************************************************
 Unit-Tests for main CRUD operations for comments
 """
+
 from main import app
 from fastapi.testclient import TestClient
 from queries.comments_queries import CommentRepository
@@ -9,7 +10,7 @@ from models.comments import (
     CommentResponse,
     CreateComment,
     Comments,
-    CommentUpdate
+    CommentUpdate,
 )
 from typing import List
 
@@ -28,6 +29,7 @@ class TestGetUserCommentsQueries:
     """
     Unit-Test [GET] user comments
     """
+
     def get_comments_by_user(self, author_id: int) -> List[Comments]:
         return [
             Comments(
@@ -64,6 +66,7 @@ class TestGetBlogCommentsQueries:
     """
     Unit-Test [GET] blog comments
     """
+
     def get_comments_by_blog_id(self, blog_id: int) -> List[Comments]:
         return [
             Comments(
@@ -100,6 +103,7 @@ class TestCommentQueries:
     """
     Unit-Test POST a comment
     """
+
     def create_comment(self, comment: CreateComment) -> CommentResponse:
         comment = CommentResponse(
             comment_id=1,
@@ -139,6 +143,7 @@ class TestUpdateCommentQueries:
     """
     Unit-Test UPDATE comment
     """
+
     def update(
         self, comment_id: int, blog_id: int, update: CommentUpdate
     ) -> CommentResponse:
@@ -174,6 +179,7 @@ class TestDeleteCommentQueries:
     """
     Unit Test DELETE comment
     """
+
     def delete(self, comment_id: int) -> bool:
         return True
 
