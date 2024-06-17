@@ -26,7 +26,7 @@ export default function SignInForm() {
     }
 
     if (user) {
-        return <Navigate to="/" />
+        return <Navigate to="/blogs" />
     }
 
     return (
