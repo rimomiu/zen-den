@@ -19,9 +19,19 @@ repo = BlogRepository()
 
 @router.post("/blogs", response_model=BlogResponse)
 def create_blogs(
-    blogs: CreateBlogs, user: UserResponse = Depends(try_get_jwt_user_data)
+    blogs: CreateBlogs,
+    repo: BlogRepository = Depends(),
+    user: UserResponse = Depends(try_get_jwt_user_data),
 ):
-    return repo.create_blogs(blogs)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Please sign in to post a blog",
+        )
+    post_blog = repo.create(blogs)
+    if not post_blog:
+        raise HTTPException(status_code=500, detail="Unable to post blog")
+    return post_blog
 
 
 @router.get("/blogs", response_model=Union[Error, List[BlogAuthorResponse]])
