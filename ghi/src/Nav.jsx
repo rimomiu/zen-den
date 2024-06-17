@@ -8,12 +8,10 @@ import {
     IconButton,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import logo from './assets/logo.png'
 
 function Nav() {
     return (
-        <AppBar position="static">
         <AppBar position="static">
             <Toolbar>
                 <Box
@@ -23,7 +21,6 @@ function Nav() {
                     }}
                     src={logo}
                     alt="Logo"
-                    alt="Logo"
                 />
                 <IconButton
                     size="large"
@@ -31,9 +28,6 @@ function Nav() {
                     color="inherit"
                     aria-label="logo"
                 ></IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    MyApp
-                </Typography>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     MyApp
                 </Typography>
