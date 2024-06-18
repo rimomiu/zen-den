@@ -1,61 +1,77 @@
+import { useState, useEffect } from 'react'
+import {
+    Container,
+    Box,
+    Typography,
+    Card,
+    CardMedia,
+    CardContent,
+} from '@mui/material'
+
 function HomePage() {
+    const [blogs, setBlogs] = useState([])
+    const [currentBlogIndex, setCurrentBlogIndex] = useState(0)
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_HOST}/blogs/`
+            )
+            if (response.ok) {
+                const data = await response.json()
+                setBlogs(data)
+            }
+        }
+
+        fetchBlogs()
+    }, [])
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentBlogIndex((prevIndex) => (prevIndex + 1) % blogs.length)
+        }, 10000) // Change every 10 seconds
+
+        return () => clearInterval(intervalId) // Clean up the interval on component unmount
+    }, [blogs.length])
+
     return (
         <>
-            <header>
-                <div className="container">
-                    <div className="row align-items-center pt-2">
-                        <div className="col-xl-3 col-lg-8 col-7 d-flex">
-                            <div className="dropdown selectBox">
-                                <a
-                                    className="dropdown-toggle selectValue text-reset"
-                                    href="javascript:void(0)"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+            <Container>
+                <Box my={4} textAlign="center">
+                    {blogs.length > 0 && (
+                        <Card>
+                            <CardMedia
+                                component="img"
+                                image={
+                                    blogs[currentBlogIndex].pic_url ||
+                                    'https://images.pexels.com/photos/6913382/pexels-photo-6913382.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+                                }
+                                alt={blogs[currentBlogIndex].title}
+                            />
+                            <CardContent>
+                                <Typography variant="h5" component="div">
+                                    {blogs[currentBlogIndex].title}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="textSecondary"
                                 >
-                                    USD $
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <div className="input-group">
-                <input
-                    className="form-control"
-                    type="search"
-                    placeholder="Search for products"
-                    aria-label="Recipient's username"
-                    aria-describedby="button-addon2"
-                />
-                <button
-                    className="btn btn-primary"
-                    type="button"
-                    id="button-addon2"
-                >
-                    Search
-                </button>
-                <a
-                    href="#"
-                    className="text-reset"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <div className="lh-1">
-                        <div className="position-relative d-inline-block mb-2">
-                            <i className="bi bi-bell fs-4"></i>
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                1
-                                <span className="visually-hidden">
-                                    unread messages
-                                </span>
-                            </span>
-                        </div>
-                        <p className="mb-0 d-none d-xl-block small">
-                            Notification
-                        </p>
-                    </div>
-                </a>
-            </div>
+                                    {blogs[currentBlogIndex].user.username}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                >
+                                    {blogs[currentBlogIndex].date_published}
+                                </Typography>
+                                <Typography variant="body1">
+                                    {blogs[currentBlogIndex].content}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    )}
+                </Box>
+            </Container>
         </>
     )
 }
