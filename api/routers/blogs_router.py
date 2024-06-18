@@ -31,11 +31,13 @@ def get_blogs(
     return repo.get_blogs()
 
 
-@router.get("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
+@router.get(
+    "/blogs/{blog_id}", response_model=Union[BlogAuthorResponse, Error]
+)
 def get_blog(
     blog_id: int,
     repo: BlogRepository = Depends(),
-) -> Union[BlogResponse, Error]:
+) -> Union[BlogAuthorResponse, Error]:
     return repo.get_blog_by_blog_id(blog_id)
 
 

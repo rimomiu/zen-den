@@ -5,10 +5,10 @@ import useAuthService from '../hooks/useAuthService'
 
 export default function SignUpForm() {
     const [username, setUsername] = useState('')
-    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [first_name, setFirstname] = useState('')
     const [last_name, setLastname] = useState('')
+    const [email, setEmail] = useState('')
     const { signup, user, error } = useAuthService()
 
     async function handleFormSubmit(e) {
