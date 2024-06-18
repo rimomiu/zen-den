@@ -88,31 +88,45 @@ class BlogRepository:
             return Error("Could not get blogs")
 
     # This function lets us get a specific blog using blog_id
-    def get_blog_by_blog_id(self, blog_id: int) -> Union[BlogResponse, Error]:
+    def get_blog_by_blog_id(
+        self, blog_id: int
+    ) -> Union[BlogAuthorResponse, Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     db.execute(
                         """
-                        SELECT * from blogs
-                        WHERE blog_id = %s
+                        SELECT b.*, u.username, u.first_name, u.last_name
+                        FROM blogs AS b
+                        JOIN users AS u
+                        ON u.user_id=b.author_id
+                        WHERE blog_id=%s
+
                         """,
-                        [blog_id],
+                        (blog_id,),
                     )
                     record = db.fetchone()
+                    print(record)
                     if record:
-                        return Blogs(
+                        user = UserAsAuthor(
+                            user_id=record[4],
+                            username=record[6],
+                            first_name=record[7],
+                            last_name=record[8],
+                        )
+                        blog = BlogAuthorResponse(
                             blog_id=record[0],
                             title=record[1],
                             pic_url=record[2],
                             content=record[3],
                             author_id=record[4],
                             date_published=record[5],
+                            user=user,
                         )
-                    else:
-                        return Error("Blog not found")
+                        return blog
 
-        except Exception:
+        except Exception as e:
+            print(e)
             return Error("Could not get blog")
 
     # this function lets us get the list of
