@@ -41,7 +41,7 @@
 
 //     useEffect(() => {
 //         fetchData()
-//     }, [userId, blogId, commentId])
+//     })
 
 //     if (!user) {
 //         return <CircularProgress />
