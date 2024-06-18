@@ -10,6 +10,7 @@ import {
     Grid,
     TextField,
 } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 function BlogList() {
     const [blogs, setBlogs] = useState([])
@@ -53,7 +54,10 @@ function BlogList() {
                         <Grid item key={blog.blog_id} md={4}>
                             {/* Use CSS classes for styling */}
                             <Card className="cardHover">
-                                <CardActionArea>
+                                <CardActionArea
+                                    component={Link}
+                                    to={`/blogs/${blog.blog_id}`}
+                                >
                                     <CardMedia
                                         component="img"
                                         className="cardImage"
