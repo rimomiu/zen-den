@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
     Card,
     CardContent,
@@ -17,18 +17,16 @@ function BlogDetail() {
     const { blogId } = useParams()
     const navigate = useNavigate()
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         const blogsUrl = `${import.meta.env.VITE_API_HOST}/blogs/${blogId}`
         const response = await fetch(blogsUrl)
-        console.log(response, 'test a response')
 
         if (response.ok) {
             const data = await response.json()
             setBlog(data)
             setUpdatedBlog(data)
-            console.log(data, 'test data')
         }
-    }
+    }, [blogId])
 
     const handleDelete = async () => {
         const deleteUrl = `${import.meta.env.VITE_API_HOST}/blogs/${blogId}`
@@ -55,7 +53,7 @@ function BlogDetail() {
 
     useEffect(() => {
         fetchData()
-    })
+    }, [fetchData])
 
     const handleChange = (e) => {
         setUpdatedBlog({

@@ -11,13 +11,15 @@ import {
     Button,
 } from '@mui/material'
 
+import { signout } from '../services/authService'
+
 export default function Profile() {
     const [user, setUser] = useState([])
     const [blogs, setBlogs] = useState([])
     const [comments, setComments] = useState([])
     const { userId } = useParams()
-    // const { blogId } = useParams()
-    // const { commentId } = useParams()
+    const { blogId } = useParams()
+    const { commentId } = useParams()
 
     const fetchData = useCallback(async () => {
         const userUrl = `${import.meta.env.VITE_API_HOST}/users/id/${userId}`
@@ -64,6 +66,10 @@ export default function Profile() {
             setComments(comments.filter((comment) => comment.id !== commentId))
         }
     }
+    const handleLogout = () => {
+        signout()
+        navigate('/')
+    }
 
     if (!user) {
         return <CircularProgress />
@@ -74,6 +80,9 @@ export default function Profile() {
             <Typography variant="h2" component="h2" gutterBottom>
                 User Profile
             </Typography>
+            <Button variant="contained" color="primary" onClick={handleLogout}>
+                Logout
+            </Button>
             <Card>
                 <CardContent>
                     <Typography variant="h6" component="p">
@@ -97,7 +106,7 @@ export default function Profile() {
                         <Card>
                             <CardActionArea
                                 component={Link}
-                                to={`/blogs/${blog.id}`}
+                                to={`/users/id/${userId}/blogs`}
                             >
                                 <CardContent>
                                     <Typography variant="h5" component="h4">
@@ -111,7 +120,7 @@ export default function Profile() {
                             <CardContent>
                                 <Button
                                     variant="contained"
-                                    color="secondary"
+                                    color="error"
                                     onClick={() => handleDeleteBlog(blog.id)}
                                     size="small"
                                 >
@@ -137,7 +146,7 @@ export default function Profile() {
                             <CardContent>
                                 <Button
                                     variant="contained"
-                                    color="secondary"
+                                    color="error"
                                     onClick={() =>
                                         handleDeleteComment(comment.id)
                                     }
