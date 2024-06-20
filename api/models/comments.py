@@ -12,7 +12,6 @@ app = FastAPI()
 class CreateComment(BaseModel):
     body: str
     blog_id: int
-    author_id: int
     date_published: date
 
 

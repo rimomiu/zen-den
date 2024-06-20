@@ -10,7 +10,6 @@ app = FastAPI()
 
 class CreateBlogs(BaseModel):
     title: str
-    author_id: int
     pic_url: str
     content: str
     date_published: date

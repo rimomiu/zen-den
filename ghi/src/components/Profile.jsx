@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
     Card,
     CardContent,
@@ -18,8 +18,7 @@ export default function Profile() {
     const [blogs, setBlogs] = useState([])
     const [comments, setComments] = useState([])
     const { userId } = useParams()
-    const { blogId } = useParams()
-    const { commentId } = useParams()
+    const navigate = useNavigate()
 
     const fetchData = useCallback(async () => {
         const userUrl = `${import.meta.env.VITE_API_HOST}/users/id/${userId}`
