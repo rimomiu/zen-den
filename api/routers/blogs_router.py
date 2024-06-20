@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from queries.blogs_queries import BlogRepository
 from models.blogs import (
     Blogs,
@@ -18,10 +18,20 @@ repo = BlogRepository()
 
 
 @router.post("/blogs", response_model=BlogResponse)
-def create_blogs(
-    blogs: CreateBlogs, user: UserResponse = Depends(try_get_jwt_user_data)
-):
-    return repo.create_blogs(blogs)
+def create_blog(
+    blogs: CreateBlogs,
+    repo: BlogRepository = Depends(),
+    user: UserResponse = Depends(try_get_jwt_user_data),
+) -> BlogResponse:
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Please sign in to post a blog",
+        )
+    post_blog = repo.create_blogs(blogs, user.user_id)
+    if not post_blog:
+        raise HTTPException(status_code=400, detail="Unable to post blog")
+    return post_blog
 
 
 @router.get("/blogs", response_model=Union[Error, List[BlogAuthorResponse]])
@@ -51,18 +61,30 @@ def get_blog_by_author(
     return repo.get_blog_by_user_id(author_id)
 
 
-@router.put("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
+@router.put("/blogs/{blog_id}", response_model=BlogResponse)
 def update_blog(
     blog_id: int,
     blog: BlogUpdate,
     repo: BlogRepository = Depends(),
-) -> Union[BlogResponse, Error]:
-    return repo.update(blog_id, blog)
+    user: UserResponse = Depends(try_get_jwt_user_data),
+) -> BlogResponse:
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Please sign in to update a blog",
+        )
+    return repo.update(blog_id, blog, user.user_id)
 
 
 @router.delete("/blogs/{blog_id}", response_model=bool)
 def delete_blog(
     blog_id: int,
     repo: BlogRepository = Depends(),
+    user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> bool:
-    return repo.delete(blog_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Sign in to delete blog.",
+        )
+    return repo.delete(blog_id, user.user_id)
