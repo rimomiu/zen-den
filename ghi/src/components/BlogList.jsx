@@ -21,7 +21,6 @@ function BlogList() {
         if (response.ok) {
             const data = await response.json()
             setBlogs(data)
-            console.log(data)
         }
     }
 
