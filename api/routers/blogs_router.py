@@ -51,8 +51,6 @@ def get_blog_by_author(
     return repo.get_blog_by_user_id(author_id)
 
 
-
-
 @router.put("/blogs/{blog_id}", response_model=Union[BlogResponse, Error])
 def update_blog(
     blog_id: int,

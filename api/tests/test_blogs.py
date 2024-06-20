@@ -5,8 +5,8 @@ Unit Tests for Blog endpoints
 from main import app
 from fastapi.testclient import TestClient
 from queries.blogs_queries import BlogRepository
-from models.blogs import CreateBlogs, BlogUpdate, BlogResponse, Blogs
-from typing import List, Optional
+from models.blogs import CreateBlogs, BlogResponse
+# from typing import List, Optional
 
 
 client = TestClient(app)
@@ -69,8 +69,10 @@ class TestDeleteBlogQueries:
     """
     Unit Test DELETE blog
     """
+
     def delete(self, blog_id: int) -> bool:
         return True
+
 
 def test_delete_blog():
     app.dependency_overrides[BlogRepository] = TestDeleteBlogQueries

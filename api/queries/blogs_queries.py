@@ -157,7 +157,6 @@ class BlogRepository:
         except Exception:
             return Error("Could not get blog")
 
-
     def update(
         self, blog_id: int, blog: BlogUpdate
     ) -> Union[BlogResponse, Error]:
