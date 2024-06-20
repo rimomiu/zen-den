@@ -15,7 +15,11 @@ from queries.pool import pool
 
 class CommentRepository:
     def update(
-        self, comment_id: int, blog_id: int, comment: CommentUpdate
+        self,
+        comment_id: int,
+        blog_id: int,
+        comment: CommentUpdate,
+        user_id=int,
     ) -> Union[CommentResponse, Error]:
         try:
             with pool.connection() as conn:
@@ -24,14 +28,12 @@ class CommentRepository:
                         """
                     UPDATE comments
                     SET body = %s
-                    WHERE comment_id = %s AND blog_id = %s
+                    WHERE comment_id = %s AND blog_id = %s AND author_id = %s
                     RETURNING *;
                     """,
-                        [comment.body, comment_id, blog_id],
+                        [comment.body, comment_id, blog_id, user_id],
                     )
-
                     updated_comment = db.fetchone()
-                    print(updated_comment)
                     if updated_comment:
                         return CommentResponse(
                             comment_id=updated_comment[0],
@@ -46,7 +48,9 @@ class CommentRepository:
             print(e)
             return Error("Could not update comment")
 
-    def create_comment(self, comment: CreateComment) -> CommentResponse:
+    def create_comment(
+        self, comment: CreateComment, user_id: int
+    ) -> CommentResponse:
         try:
             with pool.connection() as conn:
                 with conn.cursor(
@@ -67,7 +71,7 @@ class CommentRepository:
                         [
                             comment.body,
                             comment.blog_id,
-                            comment.author_id,
+                            user_id,
                             comment.date_published,
                         ],
                     )
@@ -82,24 +86,23 @@ class CommentRepository:
             raise CommentDatabaseException("Couldn't create comment")
         return comment
 
-    def delete(self, comment_id: int) -> bool:
+    def delete(self, blog_id: int, comment_id: int, user_id=int) -> bool:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
-                        DELETE FROM comments WHERE comment_id = %s
+                        DELETE FROM comments
+                        WHERE blog_id = %s
+                        AND comment_id = %s
+                        AND author_id=%s
                         """,
-                        [comment_id],
+                        [blog_id, comment_id, user_id],
                     )
-                    if cur.rowcount == 0:
-                        raise CommentDatabaseException(
-                            "Can't find this comment"
-                        )
-        except psycopg.Error as e:
+                    return True
+        except Exception as e:
             print(e)
-            raise CommentDatabaseException("Couldn't find this comment")
-        return True
+            return False
 
     def get_comments_by_blog_id(
         self, blog_id: int

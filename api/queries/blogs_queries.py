@@ -17,7 +17,7 @@ from models.users import UserAsAuthor
 # This function gets the whole list of blogs and
 # allows us to get the username of the authors who wrote the blogs
 class BlogRepository:
-    def create_blogs(self, blogs: CreateBlogs) -> BlogResponse:
+    def create_blogs(self, blogs: CreateBlogs, user_id: int) -> BlogResponse:
         try:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(BlogResponse)) as cur:
@@ -36,7 +36,7 @@ class BlogRepository:
                         """,
                         [
                             blogs.title,
-                            blogs.author_id,
+                            user_id,
                             blogs.pic_url,
                             blogs.content,
                             blogs.date_published,
@@ -88,7 +88,7 @@ class BlogRepository:
             return Error("Could not get blogs")
 
     # This function lets us get a specific blog using blog_id
-    def get_blog_by_blog_id(self, blog_id: int) -> Union[BlogResponse, Error]:
+    def get_blog_by_blog_id(self, blog_id: int) -> BlogResponse:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -144,8 +144,11 @@ class BlogRepository:
             return Error("Could not get blog")
 
     def update(
-        self, blog_id: int, blog: BlogUpdate
-    ) -> Union[BlogResponse, Error]:
+        self,
+        blog_id: int,
+        blog: BlogUpdate,
+        user_id: int,
+    ) -> BlogResponse:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -155,30 +158,34 @@ class BlogRepository:
                     SET title = %s
                     , pic_url = %s
                     , content = %s
-                    WHERE blog_id = %s
+                    WHERE blog_id = %s AND author_id= %s
                     RETURNING *;
                     """,
-                        [blog.title, blog.pic_url, blog.content, blog_id],
+                        [
+                            blog.title,
+                            blog.pic_url,
+                            blog.content,
+                            blog_id,
+                            user_id,
+                        ],
                     )
-                    updated_blog = db.fetchone()
-                    if updated_blog:
-                        return BlogResponse(
-                            blog_id=updated_blog[0],
-                            title=updated_blog[1],
-                            pic_url=updated_blog[2],
-                            content=updated_blog[3],
-                            author_id=updated_blog[4],
-                            date_published=updated_blog[5],
-                        )
-                    else:
-                        return Error("Blog not found")
-                    # old_blog_data = blog.dict()
-                    # return Blogs(id=blog_id, **old_blog_data)
+                    record = db.fetchone()
+                    updated_blog = BlogResponse(
+                        blog_id=record[0],
+                        title=record[1],
+                        pic_url=record[2],
+                        content=record[3],
+                        author_id=record[4],
+                        date_published=record[5],
+                    )
+                    if not updated_blog:
+                        raise BlogDatabaseException("Couldn't update blogs")
         except Exception as e:
             print(e)
-            return Error("Could not update blog")
+            raise BlogDatabaseException("Could not update blog")
+        return updated_blog
 
-    def delete(self, blog_id: int) -> bool:
+    def delete(self, blog_id: int, user_id: int) -> bool:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -186,8 +193,9 @@ class BlogRepository:
                         """
                     DELETE From blogs
                     WHERE blog_id = %s
+                    AND author_id = %s
                     """,
-                        [blog_id],
+                        [blog_id, user_id],
                     )
                     return True
         except Exception as e:
