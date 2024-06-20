@@ -11,7 +11,7 @@ from models.users import UserResponse
 from typing import List, Union
 from utils.authentication import try_get_jwt_user_data
 
-router = APIRouter()
+router = APIRouter(tags=["Comments"])
 repo = CommentRepository()
 
 
@@ -70,20 +70,40 @@ def delete_comment(
 
 
 @router.get(
-    "/comments/users/{author_id}", response_model=Union[Error, List[Comments]]
+    "/comments/users/{author_id}", response_model=Union[List[Comments], Error]
 )
 def get_user_comments(
     author_id: int,
     repo: CommentRepository = Depends(),
-) -> Union[Comments, Error]:
-    return repo.get_comments_by_user(author_id)
+) -> Union[List[Comments], Error]:
+    """
+    [GET] comments by author_id
+    """
+    try:
+        comments = repo.get_comments_by_user(author_id)
+        if not comments:
+            raise HTTPException(status_code=404, detail="No comments here")
+        return comments
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail="Error retrieving")
 
 
 @router.get(
-    "/comments/{blog_id}/blogs", response_model=Union[Error, List[Comments]]
+    "/blogs/{blog_id}/comments", response_model=Union[Error, List[Comments]]
 )
 def get_blog_comments(
     blog_id: int,
     repo: CommentRepository = Depends(),
-) -> Union[Comments, Error]:
-    return repo.get_comments_by_blog_id(blog_id)
+) -> Union[List[Comments], Error]:
+    """
+    [GET] comments by blog_id
+    """
+    try:
+        comments = repo.get_comments_by_blog_id(blog_id)
+        if not comments:
+            raise HTTPException(status_code=404, detail="No comments of blog")
+        return comments
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400, detail="Error retrieving")

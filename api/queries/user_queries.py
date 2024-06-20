@@ -53,9 +53,9 @@ class UserQueries:
             raise UserDatabaseException(f"Error getting user {username}")
         return user
 
-    def get_by_id(self, id: int) -> Optional[UserWithPw]:
+    def get_by_id(self, user_id: int) -> Optional[UserWithPw]:
         """
-        Gets a user from the database by user id
+        Gets a user from the database by user ID
 
         Returns None if the user isn't found
         """
@@ -67,17 +67,16 @@ class UserQueries:
                             SELECT
                                 *
                             FROM users
-                            WHERE id = %s
+                            WHERE user_id = %s
                             """,
-                        [id],
+                        [user_id],
                     )
                     user = cur.fetchone()
                     if not user:
                         return None
         except psycopg.Error as e:
             print(e)
-            raise UserDatabaseException(f"Error getting user with id {id}")
-
+            raise UserDatabaseException(f"Error getting user by ID {user_id}")
         return user
 
     def create_user(

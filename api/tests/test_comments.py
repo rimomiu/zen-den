@@ -1,3 +1,8 @@
+"""
+******************************************************************
+Unit-Tests for main CRUD operations for comments
+"""
+
 from main import app
 from fastapi.testclient import TestClient
 from queries.comments_queries import CommentRepository
@@ -13,21 +18,18 @@ from typing import List
 client = TestClient(app)
 
 
-"""
-Unit-Test Base Case
-"""
-
-
 def test_init():
+    """
+    Unit-Test Base Case
+    """
     assert 1 == 1
 
 
-"""
-Unit-Test GET user comments
-"""
-
-
 class TestGetUserCommentsQueries:
+    """
+    Unit-Test [GET] user comments
+    """
+
     def get_comments_by_user(self, author_id: int) -> List[Comments]:
         return [
             Comments(
@@ -60,12 +62,11 @@ def test_get_user_comments():
     assert response.json() == expected
 
 
-"""
-Unit-Test GET blog comments
-"""
-
-
 class TestGetBlogCommentsQueries:
+    """
+    Unit-Test [GET] blog comments
+    """
+
     def get_comments_by_blog_id(self, blog_id: int) -> List[Comments]:
         return [
             Comments(
@@ -91,19 +92,18 @@ def test_get_blog_comments():
         }
     ]
 
-    response = client.get("/comments/1/blogs")
+    response = client.get("/blogs/1/comments/")
     app.dependency_overrides = {}
 
     assert response.status_code == 200
     assert response.json() == expected
 
 
-"""
-Unit-Test POST comment
-"""
-
-
 class TestCommentQueries:
+    """
+    Unit-Test POST a comment
+    """
+
     def create_comment(self, comment: CreateComment) -> CommentResponse:
         comment = CommentResponse(
             comment_id=1,
@@ -139,12 +139,11 @@ def test_create_comment():
     assert response.json() == expected
 
 
-"""
-Unit-Test UPDATE comment
-"""
-
-
 class TestUpdateCommentQueries:
+    """
+    Unit-Test UPDATE comment
+    """
+
     def update(
         self, comment_id: int, blog_id: int, update: CommentUpdate
     ) -> CommentResponse:
@@ -176,12 +175,11 @@ def test_update_comment():
     assert response.json() == expected
 
 
-"""
-Unit Test DELETE comment
-"""
-
-
 class TestDeleteCommentQueries:
+    """
+    Unit Test DELETE comment
+    """
+
     def delete(self, comment_id: int) -> bool:
         return True
 
