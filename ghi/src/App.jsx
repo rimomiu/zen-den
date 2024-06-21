@@ -6,7 +6,7 @@ import BlogList from './components/BlogList'
 // import PostBlog from './components/PostBlog'
 import HomePage from './components/Home'
 import BlogDetail from './components/BlogDetail'
-// import Profile from './components/Profile'
+import Profile from './components/Profile'
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
 import CommentList from './components/CommentList'
@@ -24,7 +24,7 @@ function App() {
                         element={<CommentList />}
                     />
                     <Route path="/" element={<HomePage />} />
-                    {/* <Route path="/user/:userId" element={<Profile />} /> */}
+                    <Route path="/user/id/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
                 </Routes>
