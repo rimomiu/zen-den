@@ -10,7 +10,6 @@ import {
 } from '@mui/material'
 import { useParams, useNavigate } from 'react-router-dom'
 import { AuthContext } from './AuthProvider'
-import CommentForm from './CommentForm'
 
 function BlogDetail() {
     const { user } = useContext(AuthContext)
@@ -47,7 +46,6 @@ function BlogDetail() {
         const response = await fetch(updateUrl, {
             method: 'PUT',
             credentials: 'include',
-
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -70,6 +68,10 @@ function BlogDetail() {
         })
     }
 
+    const handleViewComments = () => {
+        navigate(`/blogs/${blogId}/comments`)
+    }
+
     const isAuthor = user && user.user_id === blog.author_id
 
     return (
@@ -81,21 +83,21 @@ function BlogDetail() {
                             <TextField
                                 label="Title"
                                 name="title"
-                                value={updatedBlog.title}
+                                value={updatedBlog.title || ''}
                                 onChange={handleChange}
                                 fullWidth
                             />
                             <TextField
                                 label="Pic_url"
                                 name="pic_url"
-                                value={updatedBlog.pic_url}
+                                value={updatedBlog.pic_url || ''}
                                 onChange={handleChange}
                                 fullWidth
                             />
                             <TextField
                                 label="Content"
                                 name="content"
-                                value={updatedBlog.content}
+                                value={updatedBlog.content || ''}
                                 onChange={handleChange}
                                 multiline
                                 rows={10}
@@ -149,10 +151,15 @@ function BlogDetail() {
                             </Button>
                         </>
                     )}
+                    <Button
+                        onClick={handleViewComments}
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                    >
+                        View Comments
+                    </Button>
                 </CardContent>
-            </Card>
-            <Card>
-                <CommentForm />
             </Card>
         </Container>
     )

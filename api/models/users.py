@@ -27,14 +27,12 @@ class UserResponse(BaseModel):
     last_name: str
     email: str
     user_id: int
-    admin: bool
     # this is what is returned to the user, they will see it
 
 
 class UserWithPw(UserRequest):
     # Represents a user with password included
     user_id: int
-    admin: bool
     # used to verify when the user is logging in
 
 

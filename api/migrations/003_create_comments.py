@@ -4,7 +4,7 @@ steps = [
         """
         CREATE TABLE comments (
             comment_id SERIAL PRIMARY KEY,
-            body VARCHAR(50) NOT NULL,
+            body VARCHAR(1500) NOT NULL,
             blog_id INT NOT NULL REFERENCES blogs (blog_id) ON DELETE CASCADE,
             author_id INT NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
             date_published DATE NOT NULL
