@@ -78,21 +78,21 @@ def test_create_blogs():
     assert response.json() == expected
 
 
-# class TestDeleteBlogQueries:
-#     """
-#     Unit Test DELETE blog
-#     """
+class TestDeleteBlogQueries:
+    """
+    Unit Test DELETE blog
+    """
 
-#     def delete(self, blog_id: int,user_id:int) -> bool:
-#         return True
+    def delete(self, blog_id: int, user_id: int) -> bool:
+        return True
 
 
-# def test_delete_blog():
-#     app.dependency_overrides[BlogRepository] = TestDeleteBlogQueries
-#     app.dependency_overrides[try_get_jwt_user_data]=log_in_user
+def test_delete_blog():
+    app.dependency_overrides[BlogRepository] = TestDeleteBlogQueries
+    app.dependency_overrides[try_get_jwt_user_data] = log_in_user
 
-#     response = client.delete("/blogs/1/")
-#     app.dependency_overrides = {}
+    response = client.delete("/blogs/1/")
+    app.dependency_overrides = {}
 
-#     assert response.status_code == 200
-#     assert response.json() is True
+    assert response.status_code == 200
+    assert response.json() is True
