@@ -9,6 +9,7 @@ import BlogDetail from './components/BlogDetail'
 import Profile from './components/Profile'
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
+import ContactForm from './components/ContactForm'
 function App() {
     return (
         <AuthProvider>
@@ -17,12 +18,11 @@ function App() {
                 <Routes>
                     <Route path="/blogs" element={<BlogList />} />
                     <Route path="/blogs/:blogId" element={<BlogDetail />} />
-                    <Route path="/blogs/:blogId" element={<BlogDetail />} />
                     <Route path="/" element={<HomePage />} />
                     <Route path="/user/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
-                    <Route path="/signup" element={<SignUpForm />} />
+                    <Route path="/contactme" element={<ContactForm />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
