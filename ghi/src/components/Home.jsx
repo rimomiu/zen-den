@@ -43,10 +43,10 @@ function HomePage() {
                             <CardMedia
                                 component="img"
                                 image={
-                                    blogs[currentBlogIndex].pic_url ||
+                                    blogs[currentBlogIndex]?.pic_url ||
                                     'https://images.pexels.com/photos/6913382/pexels-photo-6913382.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
                                 }
-                                alt={blogs[currentBlogIndex].title}
+                                alt={blogs[currentBlogIndex]?.title}
                             />
                             <CardContent>
                                 <Typography variant="h5" component="div">

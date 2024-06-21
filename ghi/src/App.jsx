@@ -17,10 +17,12 @@ function App() {
                 <Routes>
                     <Route path="/blogs" element={<BlogList />} />
                     <Route path="/blogs/:blogId" element={<BlogDetail />} />
+                    <Route path="/blogs/:blogId" element={<BlogDetail />} />
                     <Route path="/" element={<HomePage />} />
                     <Route path="/user/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
+                    <Route path="/signup" element={<SignUpForm />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
