@@ -9,6 +9,7 @@ import BlogDetail from './components/BlogDetail'
 import Profile from './components/Profile'
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
+import ContactForm from './components/ContactForm'
 import CommentList from './components/CommentList'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/user/id/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
+                    <Route path="/contactme" element={<ContactForm />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
