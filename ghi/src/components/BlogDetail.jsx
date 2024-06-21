@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useContext } from 'react'
 import {
     Card,
     CardContent,
@@ -9,8 +9,11 @@ import {
     Button,
 } from '@mui/material'
 import { useParams, useNavigate } from 'react-router-dom'
+import { AuthContext } from './AuthProvider'
+import CommentForm from './CommentForm'
 
 function BlogDetail() {
+    const { user } = useContext(AuthContext)
     const [blog, setBlog] = useState({ user: {} })
     const [editMode, setEditMode] = useState(false)
     const [updatedBlog, setUpdatedBlog] = useState({})
@@ -30,7 +33,10 @@ function BlogDetail() {
 
     const handleDelete = async () => {
         const deleteUrl = `${import.meta.env.VITE_API_HOST}/blogs/${blogId}`
-        const response = await fetch(deleteUrl, { method: 'DELETE' })
+        const response = await fetch(deleteUrl, {
+            method: 'DELETE',
+            credentials: 'include',
+        })
         if (response.ok) {
             navigate('/blogs')
         }
@@ -40,6 +46,8 @@ function BlogDetail() {
         const updateUrl = `${import.meta.env.VITE_API_HOST}/blogs/${blogId}`
         const response = await fetch(updateUrl, {
             method: 'PUT',
+            credentials: 'include',
+
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -62,6 +70,8 @@ function BlogDetail() {
         })
     }
 
+    const isAuthor = user && user.user_id === blog.author_id
+
     return (
         <Container style={{ marginTop: '100px' }}>
             <Card>
@@ -72,6 +82,13 @@ function BlogDetail() {
                                 label="Title"
                                 name="title"
                                 value={updatedBlog.title}
+                                onChange={handleChange}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Pic_url"
+                                name="pic_url"
+                                value={updatedBlog.pic_url}
                                 onChange={handleChange}
                                 fullWidth
                             />
@@ -112,23 +129,30 @@ function BlogDetail() {
                             </Typography>
                         </div>
                     )}
-                    <Button
-                        onClick={() => setEditMode(!editMode)}
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                    >
-                        {editMode ? 'Cancel' : 'Edit'}
-                    </Button>
-                    <Button
-                        onClick={handleDelete}
-                        variant="contained"
-                        color="error"
-                        size="small"
-                    >
-                        Delete
-                    </Button>
+                    {isAuthor && (
+                        <>
+                            <Button
+                                onClick={() => setEditMode(!editMode)}
+                                variant="contained"
+                                color="secondary"
+                                size="small"
+                            >
+                                {editMode ? 'Cancel' : 'Edit'}
+                            </Button>
+                            <Button
+                                onClick={handleDelete}
+                                variant="contained"
+                                color="error"
+                                size="small"
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    )}
                 </CardContent>
+            </Card>
+            <Card>
+                <CommentForm />
             </Card>
         </Container>
     )
