@@ -9,7 +9,6 @@ steps = [
             username VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(256) NOT NULL,
             email VARCHAR(100) NOT NULL UNIQUE,
-            admin BOOLEAN NOT NULL DEFAULT false
         );
         """,
         # "Down" SQL statement
