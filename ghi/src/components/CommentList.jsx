@@ -83,8 +83,7 @@ function CommentList() {
                             {comment.body}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                            By Author ID {comment.author_id} on{' '}
-                            {comment.date_published}
+                            {user.username} {comment.date_published}
                         </Typography>
                         {user && user.user_id === comment.author_id && (
                             <>
