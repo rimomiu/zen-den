@@ -71,6 +71,7 @@ function HomePage() {
                         </Card>
                     )}
                 </Box>
+                <Box></Box>
             </Container>
         </>
     )

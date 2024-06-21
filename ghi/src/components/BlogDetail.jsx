@@ -70,7 +70,7 @@ function BlogDetail() {
         })
     }
 
-    const isAuthor = user && user.id === blog.user.id
+    const isAuthor = user && user.user_id === blog.author_id
 
     return (
         <Container style={{ marginTop: '100px' }}>
