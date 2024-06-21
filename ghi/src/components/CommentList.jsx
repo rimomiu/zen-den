@@ -58,7 +58,7 @@ function CommentList() {
     const handleDeleteClick = async (commentId) => {
         const deleteUrl = `${
             import.meta.env.VITE_API_HOST
-        }/blogs/${blogId}/comments/${commentId}`
+        }/comments/${commentId}`
         const response = await fetch(deleteUrl, {
             method: 'DELETE',
             credentials: 'include',
