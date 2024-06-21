@@ -54,9 +54,8 @@ def update_comment(
     return repo.update(comment_id, blog_id, update, user.user_id)
 
 
-@router.delete("/blogs/{blog_id}/comments/{comment_id}", response_model=bool)
+@router.delete("/comments/{comment_id}", response_model=bool)
 def delete_comment(
-    blog_id: int,
     comment_id: int,
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
@@ -66,7 +65,12 @@ def delete_comment(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Sign in to delete blog.",
         )
-    return repo.delete(blog_id, comment_id, user.user_id)
+    # if user.user_id != :
+    #             raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED,
+    #         detail="Sign in to delete blog.",
+    #     )
+    return repo.delete(comment_id, user.user_id)
 
 
 @router.get(
