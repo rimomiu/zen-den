@@ -1,53 +1,48 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useContext } from 'react'
 import { Card, CardContent, Typography, Button, Container } from '@mui/material'
 import { useParams } from 'react-router-dom'
+import { AuthContext } from '../components/AuthProvider'
 import UpdateCommentForm from './UpdateCommentForm'
-import AddCommentForm from './AddCommentForm'
 
 function CommentList() {
+    const { user } = useContext(AuthContext)
     const [comments, setComments] = useState([])
     const [commentToUpdate, setCommentToUpdate] = useState(null)
     const { blogId } = useParams()
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const commentsUrl = `${
-                    import.meta.env.VITE_API_HOST
-                }/blogs/${blogId}/comments`
-                const response = await fetch(commentsUrl)
-                if (!response.ok) {
-                    throw new Error('Failed to fetch comments')
-                }
-                const data = await response.json()
-                setComments(data)
-            } catch (error) {
-                console.error(error)
-            }
-        }
+    const fetchComments = useCallback(async () => {
+        const commentsUrl = `${
+            import.meta.env.VITE_API_HOST
+        }/blogs/${blogId}/comments`
+        const response = await fetch(commentsUrl)
 
-        fetchComments()
+        if (response.ok) {
+            const data = await response.json()
+            setComments(data)
+        }
     }, [blogId])
+
+    useEffect(() => {
+        fetchComments()
+    }, [fetchComments])
 
     const handleUpdateClick = (comment) => {
         setCommentToUpdate(comment)
     }
 
     const handleCommentUpdate = async (commentId, updatedContent) => {
-        try {
-            const updateUrl = `${
-                import.meta.env.VITE_API_HOST
-            }/blogs/${blogId}/comments/${commentId}`
-            const response = await fetch(updateUrl, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ body: updatedContent }),
-            })
-            if (!response.ok) {
-                throw new Error('Failed to update comment')
-            }
+        const updateUrl = `${
+            import.meta.env.VITE_API_HOST
+        }/blogs/${blogId}/comments/${commentId}`
+        const response = await fetch(updateUrl, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ body: updatedContent }),
+        })
+        if (response.ok) {
             const updatedComment = await response.json()
             setComments((prevComments) =>
                 prevComments.map((comment) =>
@@ -55,32 +50,28 @@ function CommentList() {
                 )
             )
             setCommentToUpdate(null)
-        } catch (error) {
-            console.error('Error updating comment:', error)
+        } else {
+            console.error('Failed to update comment')
         }
     }
 
     const handleDeleteClick = async (commentId) => {
-        try {
-            const deleteUrl = `${
-                import.meta.env.VITE_API_HOST
-            }/blogs/${blogId}/comments/${commentId}`
-            const response = await fetch(deleteUrl, { method: 'DELETE' })
-            if (!response.ok) {
-                throw new Error('Failed to delete comment')
-            }
+        const deleteUrl = `${
+            import.meta.env.VITE_API_HOST
+        }/blogs/${blogId}/comments/${commentId}`
+        const response = await fetch(deleteUrl, {
+            method: 'DELETE',
+            credentials: 'include',
+        })
+        if (response.ok) {
             setComments((prevComments) =>
                 prevComments.filter(
                     (comment) => comment.comment_id !== commentId
                 )
             )
-        } catch (error) {
-            console.error('Error deleting comment:', error)
+        } else {
+            console.error('Failed to delete comment')
         }
-    }
-
-    const handleCommentAdded = (newComment) => {
-        setComments((prevComments) => [...prevComments, newComment])
     }
 
     return (
@@ -95,40 +86,38 @@ function CommentList() {
                             By Author ID {comment.author_id} on{' '}
                             {comment.date_published}
                         </Typography>
-                        <Button
-                            onClick={() => handleUpdateClick(comment)}
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                            style={{ marginRight: '10px' }}
-                        >
-                            Update
-                        </Button>
-                        <Button
-                            onClick={() =>
-                                handleDeleteClick(comment.comment_id)
-                            }
-                            variant="contained"
-                            color="error"
-                            size="small"
-                        >
-                            Delete
-                        </Button>
+                        {user && user.user_id === comment.author_id && (
+                            <>
+                                <Button
+                                    onClick={() => handleUpdateClick(comment)}
+                                    variant="contained"
+                                    color="primary"
+                                    size="small"
+                                    style={{ marginRight: '10px' }}
+                                >
+                                    Update
+                                </Button>
+                                <Button
+                                    onClick={() =>
+                                        handleDeleteClick(comment.comment_id)
+                                    }
+                                    variant="contained"
+                                    color="error"
+                                    size="small"
+                                >
+                                    Delete
+                                </Button>
+                            </>
+                        )}
                     </CardContent>
                 </Card>
             ))}
-            {/* Display the UpdateCommentForm component if there's a comment to update */}
             {commentToUpdate && (
                 <UpdateCommentForm
                     comment={commentToUpdate}
                     onUpdate={handleCommentUpdate}
                 />
             )}
-            {/* Display the AddCommentForm component */}
-            <AddCommentForm
-                blogId={blogId}
-                onCommentAdded={handleCommentAdded}
-            />
         </Container>
     )
 }
