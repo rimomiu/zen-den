@@ -1,26 +1,16 @@
-import React from 'react'
+import { useState } from 'react'
 import { Button, TextField, Box } from '@mui/material'
 
-function CommentForm({ onSubmit, initialValues }) {
-    const [values, setValues] = React.useState(
-        initialValues || {
-            content: '',
-        }
-    )
+function UpdateCommentForm({ comment, onUpdate }) {
+    const [content, setContent] = useState(comment.body)
 
     const handleChange = (event) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        })
+        setContent(event.target.value)
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        onSubmit(values)
-        setValues({
-            content: '',
-        })
+        onUpdate(comment.comment_id, content)
     }
 
     return (
@@ -30,9 +20,9 @@ function CommentForm({ onSubmit, initialValues }) {
                 required
                 fullWidth
                 id="content"
-                label="Comment"
+                label="Update Comment"
                 name="content"
-                value={values.content}
+                value={content}
                 onChange={handleChange}
                 autoComplete="content"
                 autoFocus
@@ -43,10 +33,10 @@ function CommentForm({ onSubmit, initialValues }) {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
             >
-                Post Comment
+                Update Comment
             </Button>
         </Box>
     )
 }
 
-export default CommentForm
+export default UpdateCommentForm
