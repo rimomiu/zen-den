@@ -10,7 +10,7 @@ import {
 
 function HomePage() {
     const [blogs, setBlogs] = useState([])
-    const [currentBlogIndex, setCurrentBlogIndex] = useState(5)
+    const [currentBlogIndex, setCurrentBlogIndex] = useState(0)
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -38,7 +38,7 @@ function HomePage() {
         <>
             <Container>
                 <Box my={4} textAlign="center">
-                    {blogs.length > 0 && (
+                    {blogs?.length > 0 && (
                         <Card>
                             <CardMedia
                                 component="img"
@@ -50,22 +50,22 @@ function HomePage() {
                             />
                             <CardContent>
                                 <Typography variant="h5" component="div">
-                                    {blogs[currentBlogIndex].title}
+                                    {blogs[currentBlogIndex]?.title}
                                 </Typography>
                                 <Typography
                                     variant="body2"
                                     color="textSecondary"
                                 >
-                                    {blogs[currentBlogIndex].user.username}
+                                    {blogs[currentBlogIndex]?.user.username}
                                 </Typography>
                                 <Typography
                                     variant="body2"
                                     color="textSecondary"
                                 >
-                                    {blogs[currentBlogIndex].date_published}
+                                    {blogs[currentBlogIndex]?.date_published}
                                 </Typography>
                                 <Typography variant="body1">
-                                    {blogs[currentBlogIndex].content}
+                                    {blogs[currentBlogIndex]?.content}
                                 </Typography>
                             </CardContent>
                         </Card>
