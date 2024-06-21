@@ -10,7 +10,7 @@ import {
 
 function HomePage() {
     const [blogs, setBlogs] = useState([])
-    const [currentBlogIndex, setCurrentBlogIndex] = useState(0)
+    const [currentBlogIndex, setCurrentBlogIndex] = useState(5)
 
     useEffect(() => {
         const fetchBlogs = async () => {

@@ -9,8 +9,10 @@ import {
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import logo from './assets/logo.png'
+import useAuthService from './hooks/useAuthService.js'
 
 function Nav() {
+    const { user, isLoggedIn } = useAuthService()
     return (
         <AppBar position="static">
             <Toolbar>
@@ -38,12 +40,32 @@ function Nav() {
                     <Button component={Link} to="/blogs" color="inherit">
                         Blogs
                     </Button>
-                    <Button component={Link} to="/signin" color="inherit">
-                        Sign In
-                    </Button>
-                    <Button component={Link} to="/signup" color="inherit">
-                        Sign Up
-                    </Button>
+                    {isLoggedIn ? (
+                        <Button
+                            component={Link}
+                            to={`/user/${user.user_id}`}
+                            color="inherit"
+                        >
+                            Profile
+                        </Button>
+                    ) : (
+                        <>
+                            <Button
+                                component={Link}
+                                to="/signin"
+                                color="inherit"
+                            >
+                                Sign In
+                            </Button>
+                            <Button
+                                component={Link}
+                                to="/signup"
+                                color="inherit"
+                            >
+                                Sign Up
+                            </Button>
+                        </>
+                    )}
                 </Stack>
             </Toolbar>
         </AppBar>
