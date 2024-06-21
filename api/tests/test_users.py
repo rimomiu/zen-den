@@ -33,7 +33,6 @@ class TestGetUserByUsernameQueries:
                 last_name="User",
                 email="testuser@example.com",
                 user_id=1,
-                admin=False,
             )
         return None
 
@@ -51,7 +50,6 @@ def test_get_user_by_username():
         "last_name": "User",
         "email": "testuser@example.com",
         "user_id": 1,
-        "admin": False,
     }
 
 
@@ -68,7 +66,6 @@ class TestGetUserByIdQueries:
                 last_name="User",
                 email="testuser@example.com",
                 user_id=1,
-                admin=False,
             )
         return None
 
@@ -86,7 +83,6 @@ def test_get_user_by_id():
         "last_name": "User",
         "email": "testuser@example.com",
         "user_id": 1,
-        "admin": False,
     }
 
 
@@ -104,7 +100,6 @@ class TestCreateUserQueries:
             last_name=new_user.last_name,
             email=new_user.email,
             user_id=1,
-            admin=False,
         )
 
 
@@ -124,7 +119,6 @@ def test_create_user():
         "last_name": "User",
         "email": "newuser@example.com",
         "user_id": 1,
-        "admin": False,
     }
 
     response = client.post("/users", json=json_data)
@@ -147,7 +141,6 @@ class TestListAllUsersQueries:
                 last_name="User",
                 email="testuser@example.com",
                 user_id=1,
-                admin=False,
             )
         ]
 
@@ -166,7 +159,6 @@ def test_list_all_users():
             "last_name": "User",
             "email": "testuser@example.com",
             "user_id": 1,
-            "admin": False,
         }
     ]
 

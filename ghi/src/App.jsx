@@ -10,6 +10,8 @@ import Profile from './components/Profile'
 import SignInForm from './components/SignInForm'
 import SignUpForm from './components/SignUpForm'
 import ContactForm from './components/ContactForm'
+import CommentList from './components/CommentList'
+
 function App() {
     return (
         <AuthProvider>
@@ -18,8 +20,12 @@ function App() {
                 <Routes>
                     <Route path="/blogs" element={<BlogList />} />
                     <Route path="/blogs/:blogId" element={<BlogDetail />} />
+                    <Route
+                        path="/blogs/:blogId/comments"
+                        element={<CommentList />}
+                    />
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/user/:userId" element={<Profile />} />
+                    <Route path="/user/id/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
                     <Route path="/contactme" element={<ContactForm />} />
