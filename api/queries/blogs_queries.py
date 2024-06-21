@@ -204,11 +204,15 @@ class BlogRepository:
                     db.execute(
                         """
                     DELETE From blogs
-                    WHERE blog_id = %s
-                    AND author_id = %s
+                    WHERE blog_id=%s
+                    AND author_id=%s
+                    RETURNING *
                     """,
                         [blog_id, user_id],
                     )
+                    blog = db.fetchone()
+                    if not blog:
+                        return False
                     return True
         except Exception as e:
             print(e)

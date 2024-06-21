@@ -86,19 +86,22 @@ class CommentRepository:
             raise CommentDatabaseException("Couldn't create comment")
         return comment
 
-    def delete(self, blog_id: int, comment_id: int, user_id=int) -> bool:
+    def delete(self, comment_id: int, user_id=int) -> bool:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
                     cur.execute(
                         """
                         DELETE FROM comments
-                        WHERE blog_id = %s
-                        AND comment_id = %s
+                        WHERE comment_id=%s
                         AND author_id=%s
+                        RETURNING *
                         """,
-                        [blog_id, comment_id, user_id],
+                        [comment_id, user_id],
                     )
+                    comment = cur.fetchone()
+                    if not comment:
+                        return False
                     return True
         except Exception as e:
             print(e)
