@@ -28,7 +28,6 @@ function App() {
                     <Route path="/user/id/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
-                    <Route path="/signup" element={<SignUpForm />} />
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

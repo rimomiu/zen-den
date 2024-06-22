@@ -65,11 +65,6 @@ def delete_comment(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Sign in to delete blog.",
         )
-    # if user.user_id != :
-    #             raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Sign in to delete blog.",
-    #     )
     return repo.delete(comment_id, user.user_id)
 
 
