@@ -23,18 +23,26 @@ def create_comment(
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ):
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please sign in to post a blog",
-        )
-    post_comment = repo.create_comment(comment, user.user_id)
-    if not post_comment:
-        raise HTTPException(status_code=400, detail="Unable to post blog")
-    return post_comment
+    """
+    [POST] create a comment
+    """
+    try:
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Please sign in to post a blog",
+            )
+        post_comment = repo.create_comment(comment, user.user_id)
+        if not post_comment:
+            raise HTTPException(
+                status_code=400, detail="Unable to post comment"
+            )
+        return post_comment
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
-# Update a comment
 @router.put(
     "/blogs/{blog_id}/comments/{comment_id}",
     response_model=Union[CommentResponse, Error],
@@ -46,12 +54,24 @@ def update_comment(
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ):
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please sign in to update a blog",
+    """
+    [PUT] update a comment
+    """
+    try:
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Please sign in to update a comment",
+            )
+        updated_comment = repo.update(
+            comment_id, blog_id, update, user.user_id
         )
-    return repo.update(comment_id, blog_id, update, user.user_id)
+        if not updated_comment:
+            raise HTTPException(status_code=404, detail="Comment not found")
+        return updated_comment
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 @router.delete("/comments/{comment_id}", response_model=bool)
@@ -60,17 +80,22 @@ def delete_comment(
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> bool:
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Sign in to delete blog.",
-        )
-    # if user.user_id != :
-    #             raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Sign in to delete blog.",
-    #     )
-    return repo.delete(comment_id, user.user_id)
+    """
+    [DELETE] delete a comment
+    """
+    try:
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Sign in to delete comment.",
+            )
+        deleted = repo.delete(comment_id, user.user_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Comment not found")
+        return deleted
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 @router.get(
