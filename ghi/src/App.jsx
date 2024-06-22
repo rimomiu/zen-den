@@ -25,7 +25,7 @@ function App() {
                         element={<CommentList />}
                     />
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/" element={<ContactForm />} />
+                    <Route path="/contactme" element={<ContactForm />} />
                     <Route path="/user/id/:userId" element={<Profile />} />
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/signin" element={<SignInForm />} />
