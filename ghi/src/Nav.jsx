@@ -50,7 +50,7 @@ function Nav() {
                         <>
                             <Button
                                 component={Link}
-                                to={`/user/${user.user_id}`}
+                                to={`/user/id/${user.user_id}`}
                                 color="inherit"
                             >
                                 Profile
