@@ -70,7 +70,7 @@ export default function Profile() {
             credentials: 'include',
         })
         if (response.ok) {
-            setComments(comments.filter((comment) => comment.id !== commentId))
+            fetchData()
         }
     }
 
