@@ -7,6 +7,7 @@ import {
     CardMedia,
     CardContent,
 } from '@mui/material'
+import ContactForm from './ContactForm'
 
 function HomePage() {
     const [blogs, setBlogs] = useState([])
@@ -71,7 +72,9 @@ function HomePage() {
                         </Card>
                     )}
                 </Box>
-                <Box></Box>
+                <Box>
+                    <ContactForm />{' '}
+                </Box>
             </Container>
         </>
     )
