@@ -88,7 +88,7 @@ class BlogRepository:
             return Error("Could not get blogs")
 
     # This function lets us get a specific blog using blog_id
-    def get_blog_by_blog_id(self, blog_id: int) -> BlogResponse:
+    def get_blog_by_blog_id(self, blog_id: int) -> Union[BlogResponse, Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
