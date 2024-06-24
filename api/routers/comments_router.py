@@ -1,3 +1,8 @@
+"""
+Comment API Router
+"""
+
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from queries.comments_queries import CommentRepository
 from models.comments import (
@@ -23,18 +28,20 @@ def create_comment(
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ):
+    """
+    [POST] Comment as a logged in user
+    """
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please sign in to post a blog",
+            detail="Please sign in to post a comment",
         )
     post_comment = repo.create_comment(comment, user.user_id)
     if not post_comment:
-        raise HTTPException(status_code=400, detail="Unable to post blog")
+        raise HTTPException(status_code=400, detail="Unable to post comment")
     return post_comment
 
 
-# Update a comment
 @router.put(
     "/blogs/{blog_id}/comments/{comment_id}",
     response_model=Union[CommentResponse, Error],
@@ -46,10 +53,13 @@ def update_comment(
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ):
+    """
+    [PUT] Update comment by comment_id
+    """
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Please sign in to update a blog",
+            detail="Please sign in to update a comment",
         )
     return repo.update(comment_id, blog_id, update, user.user_id)
 
@@ -60,16 +70,14 @@ def delete_comment(
     repo: CommentRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> bool:
+    """
+    [DELETE] comment by comment_id
+    """
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Sign in to delete blog.",
+            detail="Sign in to delete comment",
         )
-    # if user.user_id != :
-    #             raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Sign in to delete blog.",
-    #     )
     return repo.delete(comment_id, user.user_id)
 
 

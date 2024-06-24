@@ -1,3 +1,7 @@
+"""
+Blog API Router
+"""
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from queries.blogs_queries import BlogRepository
 from models.blogs import (
@@ -23,6 +27,9 @@ def create_blog(
     repo: BlogRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> BlogResponse:
+    """
+    [POST] Create a blog
+    """
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -38,6 +45,9 @@ def create_blog(
 def get_blogs(
     repo: BlogRepository = Depends(),
 ):
+    """
+    [GET] a list of all blogs
+    """
     return repo.get_blogs()
 
 
@@ -48,6 +58,9 @@ def get_blog(
     blog_id: int,
     repo: BlogRepository = Depends(),
 ) -> Union[BlogAuthorResponse, Error]:
+    """
+    [GET] blog by blog_id
+    """
     return repo.get_blog_by_blog_id(blog_id)
 
 
@@ -58,6 +71,9 @@ def get_blog_by_author(
     author_id: int,
     repo: BlogRepository = Depends(),
 ) -> Union[BlogResponse, Error]:
+    """
+    [GET] blog by author_id
+    """
     return repo.get_blog_by_user_id(author_id)
 
 
@@ -68,6 +84,9 @@ def update_blog(
     repo: BlogRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> BlogResponse:
+    """
+    [PUT] Update blog by blog_id
+    """
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -82,6 +101,9 @@ def delete_blog(
     repo: BlogRepository = Depends(),
     user: UserResponse = Depends(try_get_jwt_user_data),
 ) -> bool:
+    """
+    [DELETE] blog by blog_id
+    """
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
