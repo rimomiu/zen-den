@@ -1,6 +1,7 @@
 """
 Database Queries for Blogs
 """
+
 from utils.exceptions import BlogDatabaseException
 from models.blogs import (
     CreateBlogs,
@@ -23,6 +24,7 @@ class BlogRepository:
 
     Can be dependency injected into a route like so
     """
+
     def create_blogs(self, blogs: CreateBlogs, user_id: int) -> BlogResponse:
         """
         Creates a new blog in the database
@@ -176,7 +178,6 @@ class BlogRepository:
         blog: BlogUpdate,
         user_id: int,
     ) -> BlogResponse:
-
         """
         Update a blog by blog_id
         """

@@ -1,6 +1,7 @@
 """
 Database Queries for Comments
 """
+
 from utils.exceptions import CommentDatabaseException
 from models.comments import (
     Comments,
@@ -22,6 +23,7 @@ class CommentRepository:
 
     Can be dependency injected into a route like so
     """
+
     def update(
         self,
         comment_id: int,

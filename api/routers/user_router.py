@@ -2,7 +2,6 @@
 User API Router
 """
 
-
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional, List
 from models.users import UserResponse, UserRequest, UserUpdate
