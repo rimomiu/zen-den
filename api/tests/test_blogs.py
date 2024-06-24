@@ -5,11 +5,10 @@ Unit Tests for Blog endpoints
 from main import app
 from fastapi.testclient import TestClient
 from queries.blogs_queries import BlogRepository
-from models.blogs import CreateBlogs, BlogResponse
+from models.blogs import CreateBlogs, BlogResponse, Blogs
 from routers.blogs_router import try_get_jwt_user_data
 from models.users import UserAsAuthor
-
-# from typing import List, Optional
+from typing import List
 
 
 client = TestClient(app)
@@ -96,3 +95,42 @@ def test_delete_blog():
 
     assert response.status_code == 200
     assert response.json() is True
+
+
+class TestGetBlogs:
+    """
+    Unit-Test [GET] blogs
+    """
+
+    def get_blog_by_user_id(self, authot_id: int) -> List[Blogs]:
+        return [
+            Blogs(
+                blog_id=1,
+                title="BigYogaButt",
+                pic_url="https://youaligned.com",
+                content="Big yoga booty requires a lot of yoga",
+                author_id=1,
+                date_published="2024-05-29",
+            )
+        ]
+
+
+def test_get_blog_by_author():
+    app.dependency_overrides[BlogRepository] = TestGetBlogs
+
+    expected = [
+        {
+            "blog_id": 1,
+            "title": "BigYogaButt",
+            "pic_url": "https://youaligned.com",
+            "content": "Big yoga booty requires a lot of yoga",
+            "author_id": 1,
+            "date_published": "2024-05-29",
+        }
+    ]
+
+    response = client.get("users/1/blogs")
+    app.dependency_overrides = {}
+
+    assert response.status_code == 200
+    assert response.json() == expected

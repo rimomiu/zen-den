@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from 'react'
 import { Card, CardContent, Typography, Button, Container } from '@mui/material'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { AuthContext } from '../components/AuthProvider'
 import UpdateCommentForm from './UpdateCommentForm'
 import PostCommentForm from './PostCommentForm'
@@ -10,8 +10,8 @@ function CommentList() {
     const [comments, setComments] = useState([])
     const [commentToUpdate, setCommentToUpdate] = useState(null)
     const [newComment, setNewComment] = useState(false)
+    const [refresh, setRefresh] = useState(false)
     const { blogId } = useParams()
-    const navigate = useNavigate()
 
     const fetchComments = useCallback(async () => {
         const commentsUrl = `${
@@ -27,7 +27,7 @@ function CommentList() {
 
     useEffect(() => {
         fetchComments()
-    }, [fetchComments])
+    }, [fetchComments, refresh])
 
     const handleUpdateClick = (comment) => {
         setCommentToUpdate(comment)
@@ -99,7 +99,7 @@ function CommentList() {
                 const newComment = await response.json()
                 setComments((prevComments) => [...prevComments, newComment])
                 setNewComment(false)
-                navigate(`/blogs/${blogId}/comments`)
+                setRefresh(!refresh)
             } else {
                 console.error('Failed to create comment:', response.status)
             }
@@ -163,6 +163,7 @@ function CommentList() {
                 <PostCommentForm
                     onSubmit={handlePostComment}
                     onCancle={() => setNewComment(false)}
+                    onCommentPosted={() => setRefresh(!refresh)}
                 />
             )}
         </Container>
