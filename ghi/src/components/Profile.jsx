@@ -24,7 +24,7 @@ export default function Profile() {
         const userUrl = `${import.meta.env.VITE_API_HOST}/users/id/${userId}`
         const blogsUrl = `${
             import.meta.env.VITE_API_HOST
-        }/users/id/${userId}/blogs`
+        }/users/${userId}/blogs`
         const commentUrl = `${
             import.meta.env.VITE_API_HOST
         }/comments/users/${userId}`
@@ -77,6 +77,7 @@ export default function Profile() {
     const handleLogout = () => {
         signout()
         navigate('/')
+        window.location.reload()
     }
 
     if (!user) {
