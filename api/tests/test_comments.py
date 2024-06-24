@@ -5,10 +5,12 @@ Unit-Tests for main CRUD operations for comments
 from main import app
 from fastapi.testclient import TestClient
 from queries.comments_queries import CommentRepository
+from models.users import UserAsAuthor
 from models.comments import (
     Comments,
 )
 from typing import List
+from routers.blogs_router import try_get_jwt_user_data
 
 
 client = TestClient(app)
@@ -103,3 +105,32 @@ def test_get_blog_comments():
     # Assert: Check the response status and content
     assert response.status_code == 200
     assert response.json() == expected
+
+
+def log_in_user():
+    return UserAsAuthor(
+        user_id=5,
+        username="bobo",
+        first_name="Bobo",
+        last_name="Bobsen",
+    )
+
+
+class TestDeleteCommentQueries:
+    """
+    Unit Test DELETE comment
+    """
+
+    def delete(self, comment_id: int, user_id: int) -> bool:
+        return True
+
+
+def test_delete_comment():
+    app.dependency_overrides[CommentRepository] = TestDeleteCommentQueries
+    app.dependency_overrides[try_get_jwt_user_data] = log_in_user
+
+    response = client.delete("/comments/3/")
+    app.dependency_overrides = {}
+
+    assert response.status_code == 200
+    assert response.json() is True

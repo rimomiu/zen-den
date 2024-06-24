@@ -42,6 +42,7 @@ def create_comment(
     return post_comment
 
 
+# Update a comment
 @router.put(
     "/blogs/{blog_id}/comments/{comment_id}",
     response_model=Union[CommentResponse, Error],

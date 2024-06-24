@@ -43,9 +43,9 @@ function Nav() {
                     <Button component={Link} to="/blogs" color="inherit">
                         Blogs
                     </Button>
-                    <Button component={Link} to="/contactme" color="inherit">
+                    {/* <Button component={Link} to="/contactme" color="inherit">
                         Contact
-                    </Button>
+                    </Button> */}
                     {isLoggedIn ? (
                         <>
                             <Button
