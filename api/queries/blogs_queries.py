@@ -18,12 +18,10 @@ from models.users import UserAsAuthor
 
 
 class BlogRepository:
-
     """
     Class containing queries for the Blogs table
 
     Can be dependency injected into a route like so
-
     """
     def create_blogs(self, blogs: CreateBlogs, user_id: int) -> BlogResponse:
         """
