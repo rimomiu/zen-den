@@ -1,3 +1,7 @@
+"""
+Database Queries for Comments
+"""
+
 from utils.exceptions import CommentDatabaseException
 from models.comments import (
     Comments,
@@ -14,6 +18,12 @@ from queries.pool import pool
 
 
 class CommentRepository:
+    """
+    Class containing queries for the Comments table
+
+    Can be dependency injected into a route like so
+    """
+
     def update(
         self,
         comment_id: int,
@@ -21,6 +31,9 @@ class CommentRepository:
         comment: CommentUpdate,
         user_id=int,
     ) -> Union[CommentResponse, Error]:
+        """
+        Updates a comment in the database by comment_id
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -51,6 +64,9 @@ class CommentRepository:
     def create_comment(
         self, comment: CreateComment, user_id: int
     ) -> CommentResponse:
+        """
+        Creates a new comment in the database
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor(
@@ -87,6 +103,9 @@ class CommentRepository:
         return comment
 
     def delete(self, comment_id: int, user_id=int) -> bool:
+        """
+        Deletes a comment in the database
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as cur:
@@ -110,6 +129,9 @@ class CommentRepository:
     def get_comments_by_blog_id(
         self, blog_id: int
     ) -> Union[Error, List[Comments]]:
+        """
+        Get a list of all comments on a specific blog
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -137,6 +159,9 @@ class CommentRepository:
     def get_comments_by_user(
         self, author_id: int
     ) -> Union[Error, List[Comments]]:
+        """
+        Get a list of comments matching author_id
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:

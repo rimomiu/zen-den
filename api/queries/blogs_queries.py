@@ -1,3 +1,7 @@
+"""
+Database Queries for Blogs
+"""
+
 from utils.exceptions import BlogDatabaseException
 from models.blogs import (
     CreateBlogs,
@@ -14,10 +18,17 @@ from queries.pool import pool
 from models.users import UserAsAuthor
 
 
-# This function gets the whole list of blogs and
-# allows us to get the username of the authors who wrote the blogs
 class BlogRepository:
+    """
+    Class containing queries for the Blogs table
+
+    Can be dependency injected into a route like so
+    """
+
     def create_blogs(self, blogs: CreateBlogs, user_id: int) -> BlogResponse:
+        """
+        Creates a new blog in the database
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor(row_factory=class_row(BlogResponse)) as cur:
@@ -52,6 +63,9 @@ class BlogRepository:
         return blogs
 
     def get_blogs(self) -> Union[Error, List[BlogAuthorResponse]]:
+        """
+        Get a list of all blogs, and the username of the authors
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -87,8 +101,10 @@ class BlogRepository:
             print(e)
             return Error("Could not get blogs")
 
-    # This function lets us get a specific blog using blog_id
-    def get_blog_by_blog_id(self, blog_id: int) -> Union[BlogResponse, Error]:
+    def get_blog_by_blog_id(self, blog_id: int) -> BlogResponse:
+        """
+        Get a specific blog by blog_id
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -127,9 +143,10 @@ class BlogRepository:
             print(e)
             return Error("Could not get blog")
 
-    # this function lets us get the list of
-    # blogs written by a user using author_id
     def get_blog_by_user_id(self, author_id: int) -> Union[Error, List[Blogs]]:
+        """
+        Get list of blogs by author_id
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -161,6 +178,9 @@ class BlogRepository:
         blog: BlogUpdate,
         user_id: int,
     ) -> BlogResponse:
+        """
+        Update a blog by blog_id
+        """
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:

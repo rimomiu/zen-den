@@ -1,5 +1,4 @@
 """
-******************************************************************
 Unit-Tests for main CRUD operations for comments
 """
 
@@ -42,6 +41,7 @@ class TestGetUserCommentsQueries:
 
 
 def test_get_user_comments():
+    # Arrange: Override the dependency with the test implementation
     app.dependency_overrides[CommentRepository] = TestGetUserCommentsQueries
 
     expected = [
@@ -54,9 +54,13 @@ def test_get_user_comments():
         }
     ]
 
+    # Act: Make the GET request to the endpoint
     response = client.get("/comments/users/1")
+
+    # Clean up: Reset the dependency override
     app.dependency_overrides = {}
 
+    # Assert: Check the response status and content
     assert response.status_code == 200
     assert response.json() == expected
 
@@ -79,6 +83,7 @@ class TestGetBlogCommentsQueries:
 
 
 def test_get_blog_comments():
+    # Arrange: Override the dependency with the test implementation
     app.dependency_overrides[CommentRepository] = TestGetBlogCommentsQueries
 
     expected = [
@@ -91,9 +96,13 @@ def test_get_blog_comments():
         }
     ]
 
+    # Act: Make the GET request to the endpoint
     response = client.get("/blogs/1/comments/")
+
+    # Clean up: Reset the dependency override
     app.dependency_overrides = {}
 
+    # Assert: Check the response status and content
     assert response.status_code == 200
     assert response.json() == expected
 
