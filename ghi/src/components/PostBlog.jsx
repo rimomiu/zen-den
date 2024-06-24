@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Typography, Container, Button, IconButton, Box } from '@mui/material'
+import { Typography, Container, Button, TextField, Box } from '@mui/material'
 import useAuthService from './../hooks/useAuthService'
 
 export default function PostBlog() {
@@ -21,124 +21,120 @@ export default function PostBlog() {
             [inputName]: value,
         })
     }
-    const [message, setMessage] = useState('')
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log("I'M SUBMITTING WOOOOOOOOOOOOHOOOOOOOOOOO")
-        try {
-            const url = `${import.meta.env.VITE_API_HOST}/blogs/`
-            const fetchConfig = {
-                method: 'post',
-                credentials: 'include',
-                body: JSON.stringify(blogPost),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-            const response = await fetch(url, fetchConfig)
-            if (response.ok) {
-                setMessage('Successfully posted a blog!')
-                setBlogPost({
-                    title: '',
-                    pic_url: '',
-                    content: '',
-                    date_published: '',
-                    username: user.username,
-                })
-                navigate('/blogs')
-            } else {
-                setMessage('something went wrong, please try again')
-            }
-        } catch (e) {
-            console.log(e)
+        const url = `${import.meta.env.VITE_API_HOST}/blogs/`
+        const fetchConfig = {
+            method: 'post',
+            credentials: 'include',
+            body: JSON.stringify(blogPost),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         }
-        // const handleNavigate = (event) => {
-        //     event.preventDefault()
-        //     navigate('/blogs')
+        const response = await fetch(url, fetchConfig)
+        if (response.ok) {
+            setBlogPost({
+                title: '',
+                pic_url: '',
+                content: '',
+                date_published: '',
+                username: user.username,
+            })
+            navigate('/blogs')
+        }
     }
 
     return (
         <Container>
             <Box>
-                <IconButton
-                    aria-label="rnavigate back to events"
-                    onClick={() => navigate('/events')}
-                ></IconButton>
-
-                <Typography variant="h2" component="h2" gutterBottom>
+                <Typography variant="h1" color="#425130">
                     Post a blog
                 </Typography>
-                <form onSubmit={handleSubmit} id="create-blogpost">
-                    <div className="form-floating mb-3">
-                        <input
-                            onChange={handleFormChange}
-                            value={blogPost.title}
-                            placeholder="title"
-                            required
-                            type="text"
-                            name="title"
-                            id="title"
-                            className="form-control"
-                        />
-                        <label htmlFor="title">Title</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input
-                            onChange={handleFormChange}
-                            value={blogPost.content}
-                            placeholder="content"
-                            required
-                            type="text"
-                            name="content"
-                            id="content"
-                            className="form-control"
-                        />
-                        <label htmlFor="content">Content</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input
-                            onChange={handleFormChange}
-                            value={blogPost.pic_url}
-                            placeholder="pic_url"
-                            required
-                            type="pic_url"
-                            name="pic_url"
-                            id="pic_url"
-                            className="form-control"
-                        />
-                        <label htmlFor="Pic_url">Image URL</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input
-                            onChange={handleFormChange}
-                            value={blogPost.date_published}
-                            placeholder="date"
-                            required
-                            type="date"
-                            name="date_published"
-                            id="date"
-                            className="form-control"
-                        />
-                        <label htmlFor="date">Date</label>
-                    </div>
-                    <div className="form-floating mb-3">
-                        <input
-                            onChange={handleFormChange}
-                            value={blogPost.username}
-                            placeholder="username"
-                            required
-                            type="text"
-                            name="username"
-                            id="username"
-                            className="form-control"
-                        />
-                        <label htmlFor="username">username</label>
-                    </div>
-                    <Button className="btn btn-primary" type="submit">
-                        Post
-                    </Button>
-                </form>
-                {message && <p>{message}</p>}
+                <Box
+                    height={800}
+                    width={1100}
+                    my={5}
+                    align="center"
+                    gap={20}
+                    p={10}
+                    sx={{ border: '3px solid green' }}
+                >
+                    <form onSubmit={handleSubmit} id="create-blogpost">
+                        <Box width={900}>
+                            <TextField
+                                onChange={handleFormChange}
+                                value={blogPost.title}
+                                placeholder="title"
+                                required
+                                type="text"
+                                name="title"
+                                id="title"
+                                sx={{
+                                    width: 800,
+                                    '& .MuiInputBase-root': { height: 40 },
+                                }}
+                            />
+                        </Box>
+                        <Box>
+                            <TextField
+                                onChange={handleFormChange}
+                                value={blogPost.content}
+                                placeholder="Content"
+                                required
+                                type="text"
+                                name="content"
+                                id="content"
+                                sx={{
+                                    width: 800,
+                                    '& .MuiInputBase-root': { height: 350 },
+                                }}
+                            />
+                        </Box>
+                        <Box>
+                            <TextField
+                                onChange={handleFormChange}
+                                value={blogPost.pic_url}
+                                placeholder="Image URL"
+                                required
+                                type="pic_url"
+                                name="pic_url"
+                                id="pic_url"
+                                sx={{
+                                    width: 800,
+                                    '& .MuiInputBase-root': { height: 40 },
+                                }}
+                            />
+                        </Box>
+                        <Box>
+                            <TextField
+                                onChange={handleFormChange}
+                                value={blogPost.date_published}
+                                placeholder="date"
+                                required
+                                type="date"
+                                name="date_published"
+                                id="date"
+                            />
+                            <Typography>Published on</Typography>
+                        </Box>
+                        <Box>
+                            <TextField
+                                onChange={handleFormChange}
+                                value={blogPost.username}
+                                placeholder="By"
+                                required
+                                type="text"
+                                name="username"
+                                id="username"
+                            />
+                            <Typography>Authored By</Typography>
+                        </Box>
+                        <Button variant="contained" type="submit">
+                            Post
+                        </Button>
+                    </form>
+                </Box>
             </Box>
         </Container>
     )
