@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import emailjs from '@emailjs/browser'
 import {
     Card,
@@ -8,10 +8,12 @@ import {
     Button,
     TextField,
     Box,
+    Alert,
 } from '@mui/material'
 
 const ContactForm = () => {
     const form = useRef()
+    const [successMessage, setSuccessMessage] = useState('')
 
     const sendEmail = (e) => {
         e.preventDefault()
@@ -22,7 +24,9 @@ const ContactForm = () => {
             })
             .then(
                 () => {
-                    console.log('SUCCESS!')
+                    setSuccessMessage(
+                        'Your message has been sent successfully!'
+                    )
                 },
                 (error) => {
                     console.log('FAILED...', error.text)
@@ -37,6 +41,14 @@ const ContactForm = () => {
                     <Typography variant="h5" component="div" gutterBottom>
                         Contact Us
                     </Typography>
+                    {successMessage && (
+                        <Alert
+                            severity="success"
+                            style={{ marginBottom: '20px' }}
+                        >
+                            {successMessage}
+                        </Alert>
+                    )}
                     <form ref={form} onSubmit={sendEmail}>
                         <Box mb={2}>
                             <TextField

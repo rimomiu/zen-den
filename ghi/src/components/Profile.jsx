@@ -77,6 +77,7 @@ export default function Profile() {
     const handleLogout = () => {
         signout()
         navigate('/')
+        window.location.reload()
     }
 
     if (!user) {
