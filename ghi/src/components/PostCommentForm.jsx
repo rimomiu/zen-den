@@ -3,7 +3,7 @@ import { Card, CardContent, TextField, Typography, Button } from '@mui/material'
 import { useParams, useNavigate } from 'react-router-dom'
 import { AuthContext } from './AuthProvider'
 
-function PostCommentForm() {
+function PostCommentForm({ onCommentPosted }) {
     const { user } = useContext(AuthContext)
     const [comment, setComment] = useState('')
     const [error, setError] = useState(null)
@@ -48,6 +48,9 @@ function PostCommentForm() {
         if (response.ok) {
             setComment('')
             setError(null)
+            if (onCommentPosted) {
+                onCommentPosted()
+            }
         } else {
             setError('Failed to post comment')
         }
