@@ -22,9 +22,9 @@
 
 1. Clone the repository to local computer
 2. CD into the new project directory
-3. Run docker volume create zen-den
-4. Run docker compose build
-5. Run docker compose up
+3. Run `docker volume create zen-den`
+4. Run `docker compose build`
+5. Run `docker compose up`
 6. Go to http://localhost:8000/docs# in the browser to interact with the backend
 7. Go to http://localhost:5173/ in the browser to interact with the frontend
 8. Some data has been prefilled into our database to make the website easier to interact with when first navigating to our website.  Please note, you will not be able to sign in or post/delete/update blogs or comments with already existing user accounts because passwords for these prefilled users were saved in the database as is and were not hashed.  Thus, you will need to signup with new accounts to perform these functions.
