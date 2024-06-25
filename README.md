@@ -5,6 +5,7 @@
 - Miao Jihanyu
 - Silva Galstyn
 
+
 ### Functionality 
 
 -   Sign up/Sign in: Users can create an account with a username, password, first name, last name, and email address.
