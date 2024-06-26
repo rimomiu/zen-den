@@ -6,6 +6,9 @@
     "@fontsource/roboto": "^5.0.13",
     "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.20",
-    "emailjs": "^4.0.3"
+    "emailjs": "^4.0.3",
+    "quill": "^2.0.2",
+    "react-quill": "^2.0.0",
+    "react-quilljs": "^2.0.0"
   }
 }
