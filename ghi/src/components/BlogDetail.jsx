@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from 'react'
+import { useState, useEffect, useCallback, useContext, useRef } from 'react'
 import {
     Card,
     CardContent,
@@ -18,6 +18,7 @@ function BlogDetail() {
     const [updatedBlog, setUpdatedBlog] = useState({})
     const { blogId } = useParams()
     const navigate = useNavigate()
+    const blogbody = useRef(null)
 
     const fetchData = useCallback(async () => {
         const blogsUrl = `${import.meta.env.VITE_API_HOST}/blogs/${blogId}`
@@ -27,6 +28,7 @@ function BlogDetail() {
             const data = await response.json()
             setBlog(data)
             setUpdatedBlog(data)
+            blogbody.current.innerHTML = data.content
         }
     }, [blogId])
 
@@ -127,7 +129,7 @@ function BlogDetail() {
                                 alt={blog.title}
                             />
                             <Typography variant="body1">
-                                {blog.content}
+                                <div ref={blogbody} />
                             </Typography>
                         </div>
                     )}
