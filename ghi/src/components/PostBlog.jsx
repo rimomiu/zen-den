@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Typography, Container, Button, TextField, Box } from '@mui/material'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import useAuthService from './../hooks/useAuthService'
 
 export default function PostBlog() {
@@ -13,6 +15,7 @@ export default function PostBlog() {
         date_published: '',
         username: user.username,
     })
+
     const handleFormChange = (e) => {
         const value = e.target.value
         const inputName = e.target.name
@@ -21,6 +24,14 @@ export default function PostBlog() {
             [inputName]: value,
         })
     }
+
+    const handleContentChange = (value) => {
+        setBlogPost({
+            ...blogPost,
+            content: value,
+        })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         const url = `${import.meta.env.VITE_API_HOST}/blogs/`
@@ -48,7 +59,7 @@ export default function PostBlog() {
     return (
         <Container>
             <Box>
-                <Typography variant="h1" color="#425130">
+                <Typography variant="h2" color="#425130">
                     Post a blog
                 </Typography>
                 <Box
@@ -77,17 +88,51 @@ export default function PostBlog() {
                             />
                         </Box>
                         <Box>
-                            <TextField
-                                onChange={handleFormChange}
+                            <ReactQuill
                                 value={blogPost.content}
+                                onChange={handleContentChange}
                                 placeholder="Content"
-                                required
-                                type="text"
-                                name="content"
-                                id="content"
-                                sx={{
-                                    width: 800,
-                                    '& .MuiInputBase-root': { height: 350 },
+                                modules={{
+                                    toolbar: [
+                                        [
+                                            { header: '1' },
+                                            { header: '2' },
+                                            { font: [] },
+                                        ],
+                                        [
+                                            { list: 'ordered' },
+                                            { list: 'bullet' },
+                                        ],
+                                        [
+                                            'bold',
+                                            'italic',
+                                            'underline',
+                                            'strike',
+                                        ],
+                                        [{ align: [] }],
+                                        ['link', 'image', 'video'],
+                                    ],
+                                }}
+                                formats={[
+                                    'header',
+                                    'font',
+                                    'size',
+                                    'bold',
+                                    'italic',
+                                    'underline',
+                                    'strike',
+                                    'list',
+                                    'bullet',
+                                    'indent',
+                                    'link',
+                                    'image',
+                                    'align',
+                                    'video',
+                                ]}
+                                style={{
+                                    height: '350px',
+                                    width: '800px',
+                                    marginBottom: '20px',
                                 }}
                             />
                         </Box>
@@ -95,9 +140,9 @@ export default function PostBlog() {
                             <TextField
                                 onChange={handleFormChange}
                                 value={blogPost.pic_url}
-                                placeholder="Image URL"
+                                placeholder="Profile Picture"
                                 required
-                                type="pic_url"
+                                type="text"
                                 name="pic_url"
                                 id="pic_url"
                                 sx={{
